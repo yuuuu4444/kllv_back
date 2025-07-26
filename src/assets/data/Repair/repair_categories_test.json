@@ -1,0 +1,18 @@
+[
+  {
+    "category_no": 1,
+    "category_name": "路燈損壞"
+  },
+  {
+    "category_no": 2,
+    "category_name": "公共設施損壞"
+  },
+  {
+    "category_no": 3,
+    "category_name": "道路坑洞"
+  },
+  {
+    "category_no": 4,
+    "category_name": "其他"
+  }
+]

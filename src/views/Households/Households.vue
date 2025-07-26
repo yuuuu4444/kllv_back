@@ -3,43 +3,19 @@
   import { ref, computed } from 'vue';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/News/news_test.json';
+  import rawData from '@/assets/data/Users/households_test.json';
   import Pagination from '@/components/Pagination.vue';
 
   const tableData = ref(
     rawData.map((item, index) => {
-      let categories = '';
-      switch (item.category_no) {
-        case 1:
-          categories = '公告';
-          break;
-
-        case 2:
-          categories = '活動';
-          break;
-
-        case 3:
-          categories = '補助';
-          break;
-
-        case 4:
-          categories = '施工';
-          break;
-
-        case 5:
-          categories = '防災';
-          break;
-
-        default:
-          categories = '未分類';
-          break;
-      }
       return {
-        消息NO: item.news_no,
-        消息標題: item.title,
-        消息類型: categories,
-        消息日期: item.upload_at,
-        狀態: '未發布',
+        戶籍NO: item.household_code,
+        戶籍地址: item.address,
+        家長: '王小明',
+        帳號: item.creator_user_id,
+        電話: '0987987987',
+        電子信箱: 'abc123@gmail.com',
+        狀態: '未認證',
       };
     }),
   );
@@ -87,10 +63,6 @@
             </el-select>
           </div>
         </div>
-        <Button>
-          新增消息
-          <el-icon><Plus /></el-icon>
-        </Button>
       </div>
       <div class="table">
         <el-table
@@ -99,21 +71,29 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="消息NO"
-            label="消息NO"
+            prop="戶籍NO"
+            label="戶籍NO"
             width="100"
           />
           <el-table-column
-            prop="消息標題"
-            label="消息標題"
+            prop="戶籍地址"
+            label="戶籍地址"
           />
           <el-table-column
-            prop="消息類型"
-            label="消息類型"
+            prop="家長"
+            label="家長"
           />
           <el-table-column
-            prop="消息日期"
-            label="消息日期"
+            prop="帳號"
+            label="帳號"
+          />
+          <el-table-column
+            prop="電話"
+            label="電話"
+          />
+          <el-table-column
+            prop="電子信箱"
+            label="電子信箱"
           />
           <el-table-column
             prop="狀態"
@@ -126,31 +106,27 @@
                 style="width: 140px"
               >
                 <el-option
-                  label="未發布"
-                  value="未發布"
+                  label="已認證"
+                  value="已認證"
                 />
                 <el-option
-                  label="已發布"
-                  value="已發布"
+                  label="未認證"
+                  value="未認證"
                 />
                 <el-option
-                  label="已取消"
-                  value="已取消"
+                  label="不通過"
+                  value="不通過"
                 />
               </el-select>
             </template>
           </el-table-column>
           <el-table-column
-            prop="操作"
-            label="操作"
+            prop="詳細"
+            label="詳細"
             width="200"
           >
             <template #default="{ row }">
-              <el-button
-                icon="Edit"
-                circle
-                @click="handleEdit(row)"
-              />
+              <el-button @click="handleEdit(row)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>

@@ -1,0 +1,122 @@
+[
+  {
+    "report_no": 1,
+    "reported_post": 2,
+    "reporter_id": "user_018",
+    "reason_no": 2,
+    "reported_at": "2025-07-04 06:00:00",
+    "reviewed_admin": "admin03",
+    "removed_status": 1,
+    "removed_at": null
+  },
+  {
+    "report_no": 2,
+    "reported_post": 3,
+    "reporter_id": "user_005",
+    "reason_no": 3,
+    "reported_at": "2025-07-11 13:00:00",
+    "reviewed_admin": null,
+    "removed_status": 0,
+    "removed_at": null
+  },
+  {
+    "report_no": 3,
+    "reported_post": 3,
+    "reporter_id": "user_012",
+    "reason_no": 3,
+    "reported_at": "2025-07-12 17:00:00",
+    "reviewed_admin": "admin01",
+    "removed_status": 1,
+    "removed_at": null
+  },
+  {
+    "report_no": 4,
+    "reported_post": 2,
+    "reporter_id": "user_017",
+    "reason_no": 2,
+    "reported_at": "2025-07-02 18:00:00",
+    "reviewed_admin": null,
+    "removed_status": 0,
+    "removed_at": null
+  },
+  {
+    "report_no": 5,
+    "reported_post": 6,
+    "reporter_id": "user_004",
+    "reason_no": 1,
+    "reported_at": "2025-07-16 19:00:00",
+    "reviewed_admin": null,
+    "removed_status": 0,
+    "removed_at": null
+  },
+  {
+    "report_no": 6,
+    "reported_post": 10,
+    "reporter_id": "user_019",
+    "reason_no": 4,
+    "reported_at": "2025-07-11 20:00:00",
+    "reviewed_admin": "admin01",
+    "removed_status": 2,
+    "removed_at": "2025-07-14 20:00:00"
+  },
+  {
+    "report_no": 7,
+    "reported_post": 4,
+    "reporter_id": "user_011",
+    "reason_no": 5,
+    "reported_at": "2025-07-08 18:00:00",
+    "reviewed_admin": "admin03",
+    "removed_status": 2,
+    "removed_at": "2025-07-10 18:00:00"
+  },
+  {
+    "report_no": 8,
+    "reported_post": 4,
+    "reporter_id": "user_020",
+    "reason_no": 5,
+    "reported_at": "2025-07-02 18:00:00",
+    "reviewed_admin": "admin03",
+    "removed_status": 3,
+    "removed_at": null
+  },
+  {
+    "report_no": 9,
+    "reported_post": 10,
+    "reporter_id": "user_007",
+    "reason_no": 4,
+    "reported_at": "2025-07-12 08:00:00",
+    "reviewed_admin": "admin01",
+    "removed_status": 3,
+    "removed_at": null
+  },
+  {
+    "report_no": 10,
+    "reported_post": 9,
+    "reporter_id": "user_015",
+    "reason_no": 2,
+    "reported_at": "2025-07-15 21:00:00",
+    "reviewed_admin": "admin03",
+    "removed_status": 1,
+    "removed_at": null
+  },
+  {
+    "report_no": 11,
+    "reported_post": 3,
+    "reporter_id": "user_008",
+    "reason_no": 3,
+    "reported_at": "2025-07-05 00:00:00",
+    "reviewed_admin": null,
+    "removed_status": 0,
+    "removed_at": null
+  },
+  {
+    "report_no": 12,
+    "reported_post": 3,
+    "reporter_id": "user_018",
+    "reason_no": 3,
+    "reported_at": "2025-07-03 03:00:00",
+    "reviewed_admin": "admin02",
+    "removed_status": 1,
+    "removed_at": null
+  }
+]

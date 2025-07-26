@@ -3,31 +3,31 @@
   import { ref, computed } from 'vue';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/News/news_test.json';
+  import rawData from '@/assets/data/Community/post_reports_test.json';
   import Pagination from '@/components/Pagination.vue';
 
   const tableData = ref(
     rawData.map((item, index) => {
       let categories = '';
-      switch (item.category_no) {
+      switch (item.reason_no) {
         case 1:
-          categories = '公告';
+          categories = '仇恨言論';
           break;
 
         case 2:
-          categories = '活動';
+          categories = '暴力內容';
           break;
 
         case 3:
-          categories = '補助';
+          categories = '詐騙、不實資訊';
           break;
 
         case 4:
-          categories = '施工';
+          categories = '自我傷害、自殺';
           break;
 
         case 5:
-          categories = '防災';
+          categories = '霸凌、騷擾';
           break;
 
         default:
@@ -35,11 +35,12 @@
           break;
       }
       return {
-        消息NO: item.news_no,
-        消息標題: item.title,
-        消息類型: categories,
-        消息日期: item.upload_at,
-        狀態: '未發布',
+        檢舉NO: item.report_no,
+        檢舉貼文: '測試ABC',
+        檢舉原因: categories,
+        檢舉者: item.reporter_id,
+        檢舉時間: item.reported_at,
+        狀態: '未審理',
       };
     }),
   );
@@ -75,7 +76,7 @@
           <div class="table-filters__select">
             <el-select
               v-model="value"
-              placeholder="類型"
+              placeholder="原因"
               style="width: 240px"
             >
               <el-option
@@ -87,10 +88,6 @@
             </el-select>
           </div>
         </div>
-        <Button>
-          新增消息
-          <el-icon><Plus /></el-icon>
-        </Button>
       </div>
       <div class="table">
         <el-table
@@ -99,25 +96,30 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="消息NO"
-            label="消息NO"
+            prop="檢舉NO"
+            label="檢舉NO"
             width="100"
           />
           <el-table-column
-            prop="消息標題"
-            label="消息標題"
+            prop="檢舉貼文"
+            label="檢舉貼文"
           />
           <el-table-column
-            prop="消息類型"
-            label="消息類型"
+            prop="檢舉原因"
+            label="檢舉原因"
           />
           <el-table-column
-            prop="消息日期"
-            label="消息日期"
+            prop="檢舉者"
+            label="檢舉者"
+          />
+          <el-table-column
+            prop="檢舉時間"
+            label="檢舉時間"
           />
           <el-table-column
             prop="狀態"
             label="狀態"
+            width="200"
           >
             <template #default="{ row }">
               <el-select
@@ -126,31 +128,18 @@
                 style="width: 140px"
               >
                 <el-option
-                  label="未發布"
-                  value="未發布"
+                  label="未審理"
+                  value="未審理"
                 />
                 <el-option
-                  label="已發布"
-                  value="已發布"
+                  label="已審理"
+                  value="已審理"
                 />
                 <el-option
-                  label="已取消"
-                  value="已取消"
+                  label="不受理"
+                  value="不受理"
                 />
               </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="操作"
-            label="操作"
-            width="200"
-          >
-            <template #default="{ row }">
-              <el-button
-                icon="Edit"
-                circle
-                @click="handleEdit(row)"
-              />
             </template>
           </el-table-column>
         </el-table>

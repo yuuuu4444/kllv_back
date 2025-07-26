@@ -1,0 +1,194 @@
+[
+  {
+    "admin_id": "admin1000",
+    "password": "IRHYH7LK",
+    "full_name": "王佳蓉",
+    "level": 2,
+    "is_active": false,
+    "created_at": "2024-02-18T17:23:42.000"
+  },
+  {
+    "admin_id": "admin1001",
+    "password": "BKxJsllL",
+    "full_name": "宗筱涵",
+    "level": 1,
+    "is_active": false,
+    "created_at": "2024-12-17T12:07:03.000"
+  },
+  {
+    "admin_id": "admin1002",
+    "password": "ODfU2503",
+    "full_name": "林欣怡",
+    "level": 2,
+    "is_active": false,
+    "created_at": "2021-03-10T04:12:02.000"
+  },
+  {
+    "admin_id": "admin1003",
+    "password": "5HyRrY03",
+    "full_name": "藺怡婷",
+    "level": 2,
+    "is_active": false,
+    "created_at": "2025-02-13T01:04:16.000"
+  },
+  {
+    "admin_id": "admin1004",
+    "password": "K6JBO94X",
+    "full_name": "李俊賢",
+    "level": 2,
+    "is_active": true,
+    "created_at": "2022-10-22T21:17:21.000"
+  },
+  {
+    "admin_id": "admin1005",
+    "password": "fLEN0pTh",
+    "full_name": "黃怡伶",
+    "level": 1,
+    "is_active": false,
+    "created_at": "2025-03-12T23:02:03.000"
+  },
+  {
+    "admin_id": "admin1006",
+    "password": "nXuYgjRc",
+    "full_name": "衛詩涵",
+    "level": 1,
+    "is_active": true,
+    "created_at": "2023-10-07T09:36:33.000"
+  },
+  {
+    "admin_id": "admin1007",
+    "password": "J4HQbNLJ",
+    "full_name": "王雅筑",
+    "level": 2,
+    "is_active": true,
+    "created_at": "2020-02-13T15:01:30.000"
+  },
+  {
+    "admin_id": "admin1008",
+    "password": "yw8cb7lh",
+    "full_name": "程惠婷",
+    "level": 2,
+    "is_active": true,
+    "created_at": "2025-04-26T15:11:58.000"
+  },
+  {
+    "admin_id": "admin1009",
+    "password": "nX6bAgqn",
+    "full_name": "段惠如",
+    "level": 1,
+    "is_active": false,
+    "created_at": "2022-01-27T19:18:46.000"
+  },
+  {
+    "admin_id": "admin1010",
+    "password": "OvlFcg9m",
+    "full_name": "張雅雯",
+    "level": 2,
+    "is_active": true,
+    "created_at": "2021-11-19T19:26:26.000"
+  },
+  {
+    "admin_id": "admin1011",
+    "password": "wTZ4kP7d",
+    "full_name": "鄒怡君",
+    "level": 2,
+    "is_active": false,
+    "created_at": "2020-10-10T09:33:16.000"
+  },
+  {
+    "admin_id": "admin1012",
+    "password": "P0vpLBkD",
+    "full_name": "常佩君",
+    "level": 2,
+    "is_active": true,
+    "created_at": "2020-12-04T19:56:33.000"
+  },
+  {
+    "admin_id": "admin1013",
+    "password": "zJFtwZpI",
+    "full_name": "程雅筑",
+    "level": 2,
+    "is_active": false,
+    "created_at": "2022-10-30T19:40:35.000"
+  },
+  {
+    "admin_id": "admin1014",
+    "password": "aTucro7v",
+    "full_name": "黨婉婷",
+    "level": 2,
+    "is_active": true,
+    "created_at": "2024-08-27T04:26:02.000"
+  },
+  {
+    "admin_id": "admin1015",
+    "password": "rw6NMSyz",
+    "full_name": "李心怡",
+    "level": 1,
+    "is_active": true,
+    "created_at": "2022-09-12T00:43:35.000"
+  },
+  {
+    "admin_id": "admin1016",
+    "password": "OaluoNx2",
+    "full_name": "張宗翰",
+    "level": 2,
+    "is_active": true,
+    "created_at": "2020-04-12T10:36:05.000"
+  },
+  {
+    "admin_id": "admin1017",
+    "password": "JzyRzPcB",
+    "full_name": "馬家豪",
+    "level": 2,
+    "is_active": false,
+    "created_at": "2021-02-08T14:14:18.000"
+  },
+  {
+    "admin_id": "admin1018",
+    "password": "qjGEIU2E",
+    "full_name": "賀鈺婷",
+    "level": 1,
+    "is_active": false,
+    "created_at": "2023-04-30T17:08:52.000"
+  },
+  {
+    "admin_id": "admin1019",
+    "password": "tCY2Yl9N",
+    "full_name": "郭傑克",
+    "level": 1,
+    "is_active": true,
+    "created_at": "2021-10-30T14:34:16.000"
+  },
+  {
+    "admin_id": "admin1020",
+    "password": "fS9yQtnS",
+    "full_name": "謝怡君",
+    "level": 1,
+    "is_active": true,
+    "created_at": "2024-03-10T15:02:52.000"
+  },
+  {
+    "admin_id": "admin1021",
+    "password": "aZGghO2r",
+    "full_name": "李琬婷",
+    "level": 1,
+    "is_active": false,
+    "created_at": "2020-12-24T09:06:01.000"
+  },
+  {
+    "admin_id": "admin1022",
+    "password": "8g0yfrCX",
+    "full_name": "顧雅萍",
+    "level": 1,
+    "is_active": true,
+    "created_at": "2020-02-20T08:37:57.000"
+  },
+  {
+    "admin_id": "admin1023",
+    "password": "1iGOv2rb",
+    "full_name": "魏怡安",
+    "level": 2,
+    "is_active": false,
+    "created_at": "2021-06-13T16:02:32.000"
+  }
+]

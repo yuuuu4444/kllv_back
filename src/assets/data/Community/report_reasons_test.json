@@ -1,0 +1,22 @@
+[
+  {
+    "reason_no": 1,
+    "reason_name": "仇恨言論"
+  },
+  {
+    "reason_no": 2,
+    "reason_name": "暴力內容"
+  },
+  {
+    "reason_no": 3,
+    "reason_name": "詐騙、不實資訊"
+  },
+  {
+    "reason_no": 4,
+    "reason_name": "自我傷害、自殺"
+  },
+  {
+    "reason_no": 5,
+    "reason_name": "霸凌、騷擾"
+  }
+]

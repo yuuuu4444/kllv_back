@@ -3,7 +3,7 @@
   import { ref, computed } from 'vue';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/News/news_test.json';
+  import rawData from '@/assets/data/Events/activities_test.json';
   import Pagination from '@/components/Pagination.vue';
 
   const tableData = ref(
@@ -11,23 +11,19 @@
       let categories = '';
       switch (item.category_no) {
         case 1:
-          categories = '公告';
+          categories = '旅遊';
           break;
 
         case 2:
-          categories = '活動';
+          categories = '健康';
           break;
 
         case 3:
-          categories = '補助';
+          categories = '藝文';
           break;
 
         case 4:
-          categories = '施工';
-          break;
-
-        case 5:
-          categories = '防災';
+          categories = '其他';
           break;
 
         default:
@@ -35,10 +31,10 @@
           break;
       }
       return {
-        消息NO: item.news_no,
-        消息標題: item.title,
-        消息類型: categories,
-        消息日期: item.upload_at,
+        活動NO: item.activity_no,
+        活動標題: item.title,
+        活動類型: categories,
+        活動日期: item.start_date,
         狀態: '未發布',
       };
     }),
@@ -87,10 +83,6 @@
             </el-select>
           </div>
         </div>
-        <Button>
-          新增消息
-          <el-icon><Plus /></el-icon>
-        </Button>
       </div>
       <div class="table">
         <el-table
@@ -99,21 +91,21 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="消息NO"
-            label="消息NO"
+            prop="活動NO"
+            label="活動NO"
             width="100"
           />
           <el-table-column
-            prop="消息標題"
-            label="消息標題"
+            prop="活動標題"
+            label="活動標題"
           />
           <el-table-column
-            prop="消息類型"
-            label="消息類型"
+            prop="活動類型"
+            label="活動類型"
           />
           <el-table-column
-            prop="消息日期"
-            label="消息日期"
+            prop="活動日期"
+            label="活動日期"
           />
           <el-table-column
             prop="狀態"

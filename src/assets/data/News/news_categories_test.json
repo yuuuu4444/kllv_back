@@ -1,0 +1,22 @@
+[
+  {
+    "category_no": 1,
+    "category_name": "公告"
+  },
+  {
+    "category_no": 2,
+    "category_name": "活動"
+  },
+  {
+    "category_no": 3,
+    "category_name": "補助"
+  },
+  {
+    "category_no": 4,
+    "category_name": "施工"
+  },
+  {
+    "category_no": 5,
+    "category_name": "防災"
+  }
+]

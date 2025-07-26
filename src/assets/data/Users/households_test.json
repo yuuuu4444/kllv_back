@@ -1,0 +1,194 @@
+[
+  {
+    "household_code": "HH1000",
+    "address": "中正路604號9樓",
+    "creator_user_id": "user1000",
+    "approval_status": 2,
+    "review_admin": "admin1017",
+    "review_at": "2021-12-24T11:31:53.000"
+  },
+  {
+    "household_code": "HH1001",
+    "address": "信義路94號之2",
+    "creator_user_id": "user1001",
+    "approval_status": 2,
+    "review_admin": "admin1011",
+    "review_at": "2025-01-16T10:43:51.000"
+  },
+  {
+    "household_code": "HH1002",
+    "address": "建國路3號之5",
+    "creator_user_id": "user1002",
+    "approval_status": 0,
+    "review_admin": null,
+    "review_at": null
+  },
+  {
+    "household_code": "HH1003",
+    "address": "忠孝東路729號之5",
+    "creator_user_id": "user1003",
+    "approval_status": 3,
+    "review_admin": "admin1022",
+    "review_at": "2020-09-19T16:55:46.000"
+  },
+  {
+    "household_code": "HH1004",
+    "address": "信義路6號之7",
+    "creator_user_id": "user1004",
+    "approval_status": 3,
+    "review_admin": "admin1020",
+    "review_at": "2020-10-09T21:39:49.000"
+  },
+  {
+    "household_code": "HH1005",
+    "address": "建國路95號5樓",
+    "creator_user_id": "user1005",
+    "approval_status": 3,
+    "review_admin": "admin1011",
+    "review_at": "2023-12-07T17:40:44.000"
+  },
+  {
+    "household_code": "HH1006",
+    "address": "中正路792號之1",
+    "creator_user_id": "user1006",
+    "approval_status": 1,
+    "review_admin": "admin1006",
+    "review_at": "2024-03-26T05:40:49.000"
+  },
+  {
+    "household_code": "HH1007",
+    "address": "中正路7段51號之4",
+    "creator_user_id": "user1007",
+    "approval_status": 3,
+    "review_admin": "admin1018",
+    "review_at": "2021-09-01T01:07:21.000"
+  },
+  {
+    "household_code": "HH1008",
+    "address": "光復路38號8樓",
+    "creator_user_id": "user1008",
+    "approval_status": 2,
+    "review_admin": "admin1000",
+    "review_at": "2020-11-23T04:12:50.000"
+  },
+  {
+    "household_code": "HH1009",
+    "address": "博愛街89號8樓",
+    "creator_user_id": "user1009",
+    "approval_status": 1,
+    "review_admin": "admin1004",
+    "review_at": "2022-07-17T20:10:05.000"
+  },
+  {
+    "household_code": "HH1010",
+    "address": "博愛街82號9樓",
+    "creator_user_id": "user1010",
+    "approval_status": 2,
+    "review_admin": "admin1010",
+    "review_at": "2021-11-01T04:47:50.000"
+  },
+  {
+    "household_code": "HH1011",
+    "address": "忠孝東路1號之4",
+    "creator_user_id": "user1011",
+    "approval_status": 2,
+    "review_admin": "admin1011",
+    "review_at": "2021-12-05T07:00:34.000"
+  },
+  {
+    "household_code": "HH1012",
+    "address": "忠孝東路8號8樓",
+    "creator_user_id": "user1012",
+    "approval_status": 0,
+    "review_admin": null,
+    "review_at": null
+  },
+  {
+    "household_code": "HH1013",
+    "address": "中正路1號之0",
+    "creator_user_id": "user1013",
+    "approval_status": 2,
+    "review_admin": "admin1019",
+    "review_at": "2021-12-28T02:29:10.000"
+  },
+  {
+    "household_code": "HH1014",
+    "address": "博愛街788號之7",
+    "creator_user_id": "user1014",
+    "approval_status": 0,
+    "review_admin": null,
+    "review_at": null
+  },
+  {
+    "household_code": "HH1015",
+    "address": "中正路30號6樓",
+    "creator_user_id": "user1015",
+    "approval_status": 0,
+    "review_admin": null,
+    "review_at": null
+  },
+  {
+    "household_code": "HH1016",
+    "address": "博愛街88號之4",
+    "creator_user_id": "user1016",
+    "approval_status": 2,
+    "review_admin": "admin1005",
+    "review_at": "2020-03-30T13:39:17.000"
+  },
+  {
+    "household_code": "HH1017",
+    "address": "建國路78號之7",
+    "creator_user_id": "user1017",
+    "approval_status": 1,
+    "review_admin": "admin1018",
+    "review_at": "2022-12-04T14:03:11.000"
+  },
+  {
+    "household_code": "HH1018",
+    "address": "成功路2號3樓",
+    "creator_user_id": "user1018",
+    "approval_status": 2,
+    "review_admin": "admin1011",
+    "review_at": "2020-11-02T17:52:29.000"
+  },
+  {
+    "household_code": "HH1019",
+    "address": "信義路5號之5",
+    "creator_user_id": "user1019",
+    "approval_status": 3,
+    "review_admin": "admin1017",
+    "review_at": "2023-09-13T00:17:43.000"
+  },
+  {
+    "household_code": "HH1020",
+    "address": "忠孝東路2號6樓",
+    "creator_user_id": "user1020",
+    "approval_status": 1,
+    "review_admin": "admin1009",
+    "review_at": "2022-02-11T21:54:41.000"
+  },
+  {
+    "household_code": "HH1021",
+    "address": "民生街495號之3",
+    "creator_user_id": "user1021",
+    "approval_status": 0,
+    "review_admin": null,
+    "review_at": null
+  },
+  {
+    "household_code": "HH1022",
+    "address": "民生街9段15號6樓",
+    "creator_user_id": "user1022",
+    "approval_status": 3,
+    "review_admin": "admin1023",
+    "review_at": "2021-04-27T07:46:00.000"
+  },
+  {
+    "household_code": "HH1023",
+    "address": "民族路街892號9樓",
+    "creator_user_id": "user1023",
+    "approval_status": 1,
+    "review_admin": "admin1001",
+    "review_at": "2020-03-21T19:46:42.000"
+  }
+]

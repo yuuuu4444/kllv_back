@@ -3,27 +3,23 @@
   import { ref, computed } from 'vue';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/admin/admin_test.json';
+  import rawData from '@/assets/data/Events/activities_test.json';
   import Pagination from '@/components/Pagination.vue';
 
-  // 從json檔內取資料套入table內
   const tableData = ref(
     rawData.map((item, index) => {
-      // console.log(item);
       return {
-        序號: index + 1,
-        姓名: item.full_name,
-        帳號: item.admin_id,
-        密碼: item.password,
-        等級: item.level === 1 ? 'Admin' : '里長',
-        狀態: '已啟用', // default設定
+        活動NO: item.activity_no,
+        活動名稱: item.title,
+        活動日期: item.start_date,
+        報名截止: item.registration_end,
+        報名名額: `${item.registered_count} / ${item.capacity_limit}`,
       };
     }),
   );
 
-  // 控制每一頁呈現的資料長度
-  const currentPage = ref(1); // 記錄目前在第幾頁
-  const pageSize = 12; // 每頁要顯示的資料數
+  const currentPage = ref(1);
+  const pageSize = 12;
 
   const currentPageData = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
@@ -36,25 +32,11 @@
     <el-main>
       <div class="panel">
         <div class="panel-filters">
-          <div class="table-filters__select">
-            <el-select
-              v-model="value"
-              placeholder="狀態"
-              style="width: 240px"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div>
           <div class="panel-filters__input flex gap-4">
             <el-input
               v-model="input4"
               style="width: 240px"
-              placeholder="姓名"
+              placeholder="活動名稱"
             >
               <template #prefix>
                 <el-icon class="el-input__icon"><search /></el-icon>
@@ -62,10 +44,6 @@
             </el-input>
           </div>
         </div>
-        <Button>
-          新增管理員
-          <el-icon><Plus /></el-icon>
-        </Button>
       </div>
       <div class="table">
         <el-table
@@ -74,46 +52,32 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="序號"
-            label="序號"
+            prop="活動NO"
+            label="活動NO"
             width="100"
           />
           <el-table-column
-            prop="姓名"
-            label="姓名"
+            prop="活動名稱"
+            label="活動名稱"
           />
           <el-table-column
-            prop="帳號"
-            label="帳號"
+            prop="活動日期"
+            label="活動日期"
           />
           <el-table-column
-            prop="密碼"
-            label="密碼"
+            prop="報名截止"
+            label="報名截止"
           />
           <el-table-column
-            prop="等級"
-            label="等級"
+            prop="報名名額"
+            label="報名名額"
           />
           <el-table-column
-            prop="狀態"
-            label="狀態"
-            width="200"
+            prop="報名訂單"
+            label="報名訂單"
           >
             <template #default="{ row }">
-              <el-select
-                v-model="row.狀態"
-                placeholder="選擇狀態"
-                style="width: 140px"
-              >
-                <el-option
-                  label="已啟用"
-                  value="已啟用"
-                />
-                <el-option
-                  label="已停用"
-                  value="已停用"
-                />
-              </el-select>
+              <el-button @click="handleEdit(row)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>
