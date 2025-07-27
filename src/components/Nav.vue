@@ -71,9 +71,9 @@
   .el-menu-item,
   .el-sub-menu {
     span {
-      font-size: 24px;
+      font-size: 20px;
     }
-    font-size: 24px;
+    font-size: 20px;
     margin: 20px;
   }
 
