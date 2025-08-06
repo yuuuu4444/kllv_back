@@ -4,25 +4,64 @@
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
   import rawData from '@/assets/data/VillageChiefs/village_chiefs_test.json';
+  const originalData = ref(rawData);
+  const isEditing = ref(false);
 
   const tableData = ref(
     rawData.map((item) => {
       return {
-        姓名: item.vc_name,
-        簡介: item.vc_intro,
-        電話: item.vc_phone,
-        信箱: item.vc_email,
-        地址: item.vc_address,
+        id: item.vc_no,
+        name: item.vc_name,
+        intro: item.vc_intro,
+        phone: item.vc_phone,
+        email: item.vc_email,
+        address: item.vc_address,
       };
     }),
   );
+
+  const findChanges = (original, edited) => {
+    const changes = {};
+    for (let key in edited) {
+      if (edited[key] !== original[key]) {
+        changes[key] = edited[key];
+      }
+    }
+    return changes;
+  };
+
+  const saveChanges = async () => {
+    for (let i = 0; i < tableData.value.length; i++) {
+      const original = originalData.value[i];
+      const edited = tableData.value[i];
+
+      const changes = findChanges(original, edited);
+
+      if (Object.keys(changes).length > 0) {
+        const payload = { id: edited.vc_no, ...changes };
+
+        console.log('更新資料:', payload);
+      }
+    }
+
+    ElMessage.success('已儲存變更！');
+  };
+
+  const handelSave = () => {
+    if (isEditing.value) {
+      saveChanges();
+    }
+    isEditing.value = !isEditing.value;
+  };
 </script>
 
 <template>
   <el-container>
     <el-main>
       <div class="panel">
-        <Button>編輯</Button>
+        <Button @click="handelSave">
+          {{ isEditing ? '儲存' : '編輯' }}
+        </Button>
       </div>
       <div class="table">
         <el-table
@@ -31,27 +70,75 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="姓名"
+            prop="name"
             label="姓名"
             width="100"
-          />
+          >
+            <template #default="{ row }">
+              <el-input
+                v-if="isEditing"
+                v-model="row.name"
+                type="text"
+              />
+              <span v-else>{{ row.name }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="簡介"
+            prop="intro"
             label="簡介"
             width="500"
-          />
+          >
+            <template #default="{ row }">
+              <el-input
+                v-if="isEditing"
+                v-model="row.intro"
+                type="textarea"
+                autosize
+              />
+              <span v-else>{{ row.intro }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="電話"
+            prop="phone"
             label="電話"
-          />
+          >
+            <template #default="{ row }">
+              <el-input
+                v-if="isEditing"
+                v-model="row.phone"
+                type="text"
+              />
+              <span v-else>{{ row.phone }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="信箱"
+            prop="email"
             label="信箱"
-          />
+          >
+            <template #default="{ row }">
+              <el-input
+                v-if="isEditing"
+                v-model="row.email"
+                type="textarea"
+                autosize
+              />
+              <span v-else>{{ row.email }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="地址"
+            prop="address"
             label="地址"
-          />
+          >
+            <template #default="{ row }">
+              <el-input
+                v-if="isEditing"
+                v-model="row.address"
+                type="textarea"
+                autosize
+              />
+              <span v-else>{{ row.address }}</span>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
 
