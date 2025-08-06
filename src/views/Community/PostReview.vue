@@ -35,12 +35,12 @@
           break;
       }
       return {
-        檢舉NO: item.report_no,
-        檢舉貼文: '測試ABC',
-        檢舉原因: categories,
-        檢舉者: item.reporter_id,
-        檢舉時間: item.reported_at,
-        狀態: '未審理',
+        report_no: item.report_no,
+        post: '測試ABC',
+        reason: categories,
+        reporter_id: item.reporter_id,
+        reported_at: item.reported_at,
+        status: '未審理',
       };
     }),
   );
@@ -96,28 +96,28 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="檢舉NO"
+            prop="report_no"
             label="檢舉NO"
             width="100"
           />
           <el-table-column
-            prop="檢舉貼文"
+            prop="post"
             label="檢舉貼文"
           />
           <el-table-column
-            prop="檢舉原因"
+            prop="reason"
             label="檢舉原因"
           />
           <el-table-column
-            prop="檢舉者"
+            prop="reporter_id"
             label="檢舉者"
           />
           <el-table-column
-            prop="檢舉時間"
+            prop="reported_at"
             label="檢舉時間"
           />
           <el-table-column
-            prop="狀態"
+            prop="status"
             label="狀態"
             width="200"
           >

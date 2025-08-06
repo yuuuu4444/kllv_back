@@ -9,11 +9,11 @@
   const tableData = ref(
     rawData.map((item, index) => {
       return {
-        活動NO: item.activity_no,
-        活動名稱: item.title,
-        活動日期: item.start_date,
-        報名截止: item.registration_end,
-        報名名額: `${item.registered_count} / ${item.capacity_limit}`,
+        activity_no: item.activity_no,
+        title: item.title,
+        start_date: item.start_date,
+        registration_end: item.registration_end,
+        applicants: `${item.registered_count} / ${item.capacity_limit}`,
       };
     }),
   );
@@ -52,28 +52,28 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="活動NO"
+            prop="activity_no"
             label="活動NO"
             width="100"
           />
           <el-table-column
-            prop="活動名稱"
+            prop="title"
             label="活動名稱"
           />
           <el-table-column
-            prop="活動日期"
+            prop="start_date"
             label="活動日期"
           />
           <el-table-column
-            prop="報名截止"
+            prop="registration_end"
             label="報名截止"
           />
           <el-table-column
-            prop="報名名額"
+            prop="applicants"
             label="報名名額"
           />
           <el-table-column
-            prop="報名訂單"
+            prop="application_order"
             label="報名訂單"
           >
             <template #default="{ row }">

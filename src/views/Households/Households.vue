@@ -9,13 +9,13 @@
   const tableData = ref(
     rawData.map((item, index) => {
       return {
-        戶籍NO: item.household_code,
-        戶籍地址: item.address,
-        家長: '王小明',
-        帳號: item.creator_user_id,
-        電話: '0987987987',
-        電子信箱: 'abc123@gmail.com',
-        狀態: '未認證',
+        household_code: item.household_code,
+        address: item.address,
+        user: '王小明',
+        user_id: item.creator_user_id,
+        phone: '0987987987',
+        email: 'abc123@gmail.com',
+        status: '未認證',
       };
     }),
   );
@@ -71,32 +71,32 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="戶籍NO"
+            prop="household_code"
             label="戶籍NO"
             width="100"
           />
           <el-table-column
-            prop="戶籍地址"
+            prop="address"
             label="戶籍地址"
           />
           <el-table-column
-            prop="家長"
+            prop="user"
             label="家長"
           />
           <el-table-column
-            prop="帳號"
+            prop="user_id"
             label="帳號"
           />
           <el-table-column
-            prop="電話"
+            prop="phone"
             label="電話"
           />
           <el-table-column
-            prop="電子信箱"
+            prop="email"
             label="電子信箱"
           />
           <el-table-column
-            prop="狀態"
+            prop="status"
             label="狀態"
           >
             <template #default="{ row }">

@@ -31,12 +31,12 @@
           break;
       }
       return {
-        案件NO: item.report_no,
-        通報人: item.user_account,
-        聯絡電話: '0987987987',
-        案件類型: categories,
-        通報日期: item.created_at,
-        狀態: '待處理',
+        report_no: item.report_no,
+        user: item.user_account,
+        phone: '0987987987',
+        categories: categories,
+        time: item.created_at,
+        status: '待處理',
       };
     }),
   );
@@ -92,28 +92,28 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="案件NO"
+            prop="report_no"
             label="案件NO"
             width="100"
           />
           <el-table-column
-            prop="通報人"
+            prop="user"
             label="通報人"
           />
           <el-table-column
-            prop="聯絡電話"
+            prop="phone"
             label="聯絡電話"
           />
           <el-table-column
-            prop="案件類型"
+            prop="categories"
             label="案件類型"
           />
           <el-table-column
-            prop="通報日期"
+            prop="time"
             label="通報日期"
           />
           <el-table-column
-            prop="狀態"
+            prop="status"
             label="狀態"
           >
             <template #default="{ row }">

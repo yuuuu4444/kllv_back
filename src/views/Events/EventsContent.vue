@@ -31,11 +31,11 @@
           break;
       }
       return {
-        活動NO: item.activity_no,
-        活動標題: item.title,
-        活動類型: categories,
-        活動日期: item.start_date,
-        狀態: '未發布',
+        activity_no: item.activity_no,
+        title: item.title,
+        categories: categories,
+        start_date: item.start_date,
+        status: '未發布',
       };
     }),
   );
@@ -91,24 +91,24 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="活動NO"
+            prop="activity_no"
             label="活動NO"
             width="100"
           />
           <el-table-column
-            prop="活動標題"
+            prop="title"
             label="活動標題"
           />
           <el-table-column
-            prop="活動類型"
+            prop="categories"
             label="活動類型"
           />
           <el-table-column
-            prop="活動日期"
+            prop="start_date"
             label="活動日期"
           />
           <el-table-column
-            prop="狀態"
+            prop="status"
             label="狀態"
           >
             <template #default="{ row }">
