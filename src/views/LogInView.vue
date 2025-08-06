@@ -65,12 +65,12 @@
               <el-form-item>
                 <el-button
                   type="primary"
-                  block
                   :style="{
                     backgroundColor: buttonColor,
                     color: textColor,
                   }"
                   @click="handleLogin"
+                  class="login-btn"
                 >
                   登入
                 </el-button>
@@ -109,8 +109,10 @@
     font-size: 20px;
   }
 
-  ::v-deep(.el-button) {
+  .login-btn {
     width: 100%;
+    height: 40px;
     font-size: 20px;
+    margin-top: 10px;
   }
 </style>
