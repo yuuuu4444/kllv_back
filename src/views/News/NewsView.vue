@@ -6,50 +6,54 @@
   import rawData from '@/assets/data/News/news_test.json';
   import Pagination from '@/components/Pagination.vue';
 
+  const statusFilter = ref('');
+  const categoryFilter = ref('');
+
+  const statusOptions = [
+    { label: '未發布', value: 0 },
+    { label: '已發布', value: 2 },
+    { label: '已取消', value: 3 },
+  ];
+
+  const categoryOptions = [
+    { label: '公告', value: 1 },
+    { label: '活動', value: 2 },
+    { label: '補助', value: 3 },
+    { label: '施工', value: 4 },
+    { label: '防災', value: 5 },
+  ];
+
+  const statusFilterOptions = [{ label: '全部', value: '' }, ...statusOptions];
+  const categoryFilterOptions = [{ label: '全部', value: '' }, ...categoryOptions];
+
   const tableData = ref(
     rawData.map((item, index) => {
-      let categories = '';
-      switch (item.category_no) {
-        case 1:
-          categories = '公告';
-          break;
-
-        case 2:
-          categories = '活動';
-          break;
-
-        case 3:
-          categories = '補助';
-          break;
-
-        case 4:
-          categories = '施工';
-          break;
-
-        case 5:
-          categories = '防災';
-          break;
-
-        default:
-          categories = '未分類';
-          break;
-      }
+      const categoryItem = categoryOptions.find((c) => c.value === item.category_no);
       return {
-        消息NO: item.news_no,
-        消息標題: item.title,
-        消息類型: categories,
-        消息日期: item.upload_at,
-        狀態: '未發布',
+        news_no: item.news_no,
+        title: item.title,
+        categories: item.category_no,
+        category_label: categoryItem ? categoryItem.label : '未分類',
+        upload_at: item.upload_at,
+        status: item.status,
       };
     }),
   );
+
+  const filteredTableData = computed(() => {
+    return tableData.value.filter((item) => {
+      const statusMatch = statusFilter.value === '' || item.status === statusFilter.value;
+      const categoryMatch = categoryFilter.value === '' || item.categories === categoryFilter.value;
+      return statusMatch && categoryMatch;
+    });
+  });
 
   const currentPage = ref(1);
   const pageSize = 12;
 
   const currentPageData = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
-    return tableData.value.slice(start, start + pageSize);
+    return filteredTableData.value.slice(start, start + pageSize);
   });
 </script>
 
@@ -60,12 +64,12 @@
         <div class="panel-filters">
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="statusFilter"
               placeholder="狀態"
               style="width: 240px"
             >
               <el-option
-                v-for="item in options"
+                v-for="item in statusFilterOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -74,12 +78,12 @@
           </div>
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="categoryFilter"
               placeholder="類型"
               style="width: 240px"
             >
               <el-option
-                v-for="item in options"
+                v-for="item in categoryFilterOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -99,49 +103,43 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="消息NO"
+            prop="news_no"
             label="消息NO"
             width="100"
           />
           <el-table-column
-            prop="消息標題"
+            prop="title"
             label="消息標題"
           />
           <el-table-column
-            prop="消息類型"
+            prop="category_label"
             label="消息類型"
           />
           <el-table-column
-            prop="消息日期"
+            prop="upload_at"
             label="消息日期"
           />
           <el-table-column
-            prop="狀態"
+            prop="status"
             label="狀態"
           >
             <template #default="{ row }">
               <el-select
-                v-model="row.狀態"
+                v-model="row.status"
                 placeholder="選擇狀態"
                 style="width: 140px"
               >
                 <el-option
-                  label="未發布"
-                  value="未發布"
-                />
-                <el-option
-                  label="已發布"
-                  value="已發布"
-                />
-                <el-option
-                  label="已取消"
-                  value="已取消"
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
                 />
               </el-select>
             </template>
           </el-table-column>
           <el-table-column
-            prop="操作"
+            prop="manipulate"
             label="操作"
             width="200"
           >
@@ -157,7 +155,7 @@
       </div>
       <div class="pagination">
         <Pagination
-          :total="tableData.length"
+          :total="filteredTableData.length"
           :page-size="pageSize"
           v-model:currentPage="currentPage"
         />

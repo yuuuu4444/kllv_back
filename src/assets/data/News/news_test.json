@@ -5,7 +5,7 @@
     "category_no": 3,
     "content": "社區停水通知 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
     "upload_admin": "admin002",
-    "status": 1,
+    "status": 0,
     "upload_at": "2025-07-04 00:00:00"
   },
   {
@@ -95,7 +95,7 @@
     "category_no": 3,
     "content": "社區烤肉區開放申請 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
     "upload_admin": "admin001",
-    "status": 1,
+    "status": 0,
     "upload_at": "2025-07-24 00:00:00"
   },
   {
@@ -131,7 +131,7 @@
     "category_no": 2,
     "content": "公告：夜間施工聲響 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
     "upload_admin": "admin001",
-    "status": 1,
+    "status": 0,
     "upload_at": "2025-07-19 00:00:00"
   },
   {
@@ -140,7 +140,7 @@
     "category_no": 1,
     "content": "社區植栽修剪作業 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
     "upload_admin": "admin002",
-    "status": 1,
+    "status": 0,
     "upload_at": "2025-07-04 00:00:00"
   },
   {
@@ -185,7 +185,7 @@
     "category_no": 4,
     "content": "公告：電力系統檢修 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
     "upload_admin": "admin001",
-    "status": 1,
+    "status": 0,
     "upload_at": "2025-07-06 00:00:00"
   },
   {
