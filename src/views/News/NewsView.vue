@@ -91,10 +91,12 @@
             </el-select>
           </div>
         </div>
-        <Button>
-          新增消息
-          <el-icon><Plus /></el-icon>
-        </Button>
+        <RouterLink to="/news/edit">
+          <Button>
+            新增消息
+            <el-icon><Plus /></el-icon>
+          </Button>
+        </RouterLink>
       </div>
       <div class="table">
         <el-table

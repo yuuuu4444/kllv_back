@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@/views/LogInView.vue';
 
+import NewsRoutes from '@/router/news';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -41,12 +43,6 @@ const router = createRouter({
       meta: { layout: 'default' },
     },
     {
-      path: '/news',
-      name: 'News',
-      component: () => import('@/views/News/NewsView.vue'),
-      meta: { layout: 'default' },
-    },
-    {
       path: '/repair',
       name: 'Repair',
       component: () => import('@/views/Repair/RepairView.vue'),
@@ -64,6 +60,8 @@ const router = createRouter({
       component: () => import('@/views/Households/Households.vue'),
       meta: { layout: 'default' },
     },
+
+    ...NewsRoutes,
   ],
 });
 
