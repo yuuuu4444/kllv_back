@@ -9,9 +9,10 @@ export default [
     meta: { layout: 'default' },
   },
   {
-    path: '/news/edit',
+    path: '/news/edit/:news_no?',
     name: 'NewsEdit',
     component: NewsEdit,
     meta: { layout: 'default' },
+    props: true,
   },
 ];

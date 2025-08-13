@@ -32,9 +32,9 @@
       return {
         news_no: item.news_no,
         title: item.title,
-        categories: item.category_no,
+        category_no: item.category_no,
         category_label: categoryItem ? categoryItem.label : '未分類',
-        upload_at: item.upload_at,
+        published_at: item.published_at,
         status: item.status,
       };
     }),
@@ -43,7 +43,8 @@
   const filteredTableData = computed(() => {
     return tableData.value.filter((item) => {
       const statusMatch = statusFilter.value === '' || item.status === statusFilter.value;
-      const categoryMatch = categoryFilter.value === '' || item.categories === categoryFilter.value;
+      const categoryMatch =
+        categoryFilter.value === '' || item.category_no === categoryFilter.value;
       return statusMatch && categoryMatch;
     });
   });
@@ -118,7 +119,7 @@
             label="消息類型"
           />
           <el-table-column
-            prop="upload_at"
+            prop="published_at"
             label="消息日期"
           />
           <el-table-column
@@ -146,11 +147,12 @@
             width="200"
           >
             <template #default="{ row }">
-              <el-button
-                icon="Edit"
-                circle
-                @click="handleEdit(row)"
-              />
+              <RouterLink :to="`/news/edit/${row.news_no}`">
+                <el-button
+                  icon="Edit"
+                  circle
+                />
+              </RouterLink>
             </template>
           </el-table-column>
         </el-table>
