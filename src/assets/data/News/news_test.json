@@ -4,215 +4,191 @@
     "title": "社區停水通知",
     "category_no": 3,
     "content": "社區停水通知 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin002",
     "status": 0,
-    "upload_at": "2025-07-04 00:00:00"
+    "published_at": "2025-07-04"
   },
   {
     "news_no": 2,
     "title": "中秋節活動開跑",
     "category_no": 2,
     "content": "中秋節活動開跑 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin002",
     "status": 0,
-    "upload_at": "2025-07-24 00:00:00"
+    "published_at": "2025-07-24"
   },
   {
     "news_no": 3,
     "title": "補助申請截止提醒",
     "category_no": 2,
     "content": "補助申請截止提醒 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin004",
     "status": 2,
-    "upload_at": "2025-07-05 00:00:00"
+    "published_at": "2025-07-05"
   },
   {
     "news_no": 4,
     "title": "社區道路施工",
     "category_no": 3,
     "content": "社區道路施工 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin004",
     "status": 0,
-    "upload_at": "2025-07-16 00:00:00"
+    "published_at": "2025-07-16"
   },
   {
     "news_no": 5,
     "title": "颱風防災準備",
     "category_no": 1,
     "content": "颱風防災準備 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin004",
     "status": 3,
-    "upload_at": "2025-07-26 00:00:00"
+    "published_at": "2025-07-26"
   },
   {
     "news_no": 6,
     "title": "垃圾清運時間異動",
     "category_no": 2,
     "content": "垃圾清運時間異動 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin002",
     "status": 0,
-    "upload_at": "2025-07-05 00:00:00"
+    "published_at": "2025-07-05"
   },
   {
     "news_no": 7,
     "title": "鄰里大會召開公告",
     "category_no": 2,
     "content": "鄰里大會召開公告 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin003",
     "status": 0,
-    "upload_at": "2025-07-17 00:00:00"
+    "published_at": "2025-07-17"
   },
   {
     "news_no": 8,
     "title": "防疫補助方案",
     "category_no": 5,
     "content": "防疫補助方案 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin002",
     "status": 2,
-    "upload_at": "2025-07-05 00:00:00"
+    "published_at": "2025-07-05"
   },
   {
     "news_no": 9,
     "title": "電梯維修進度更新",
     "category_no": 4,
     "content": "電梯維修進度更新 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin004",
     "status": 3,
-    "upload_at": "2025-07-13 00:00:00"
+    "published_at": "2025-07-13"
   },
   {
     "news_no": 10,
     "title": "防火演習時間公佈",
     "category_no": 5,
     "content": "防火演習時間公佈 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin001",
     "status": 2,
-    "upload_at": "2025-07-16 00:00:00"
+    "published_at": "2025-07-16"
   },
   {
     "news_no": 11,
     "title": "社區烤肉區開放申請",
     "category_no": 3,
     "content": "社區烤肉區開放申請 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin001",
     "status": 0,
-    "upload_at": "2025-07-24 00:00:00"
+    "published_at": "2025-07-24"
   },
   {
     "news_no": 12,
     "title": "住戶消防訓練開課",
     "category_no": 3,
     "content": "住戶消防訓練開課 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin001",
     "status": 3,
-    "upload_at": "2025-07-21 00:00:00"
+    "published_at": "2025-07-21"
   },
   {
     "news_no": 13,
     "title": "管委會改選通知",
     "category_no": 4,
     "content": "管委會改選通知 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin004",
     "status": 3,
-    "upload_at": "2025-07-01 00:00:00"
+    "published_at": "2025-07-01"
   },
   {
     "news_no": 14,
     "title": "防汛演練提醒",
     "category_no": 3,
     "content": "防汛演練提醒 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin002",
     "status": 2,
-    "upload_at": "2025-07-21 00:00:00"
+    "published_at": "2025-07-21"
   },
   {
     "news_no": 15,
     "title": "公告：夜間施工聲響",
     "category_no": 2,
     "content": "公告：夜間施工聲響 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin001",
     "status": 0,
-    "upload_at": "2025-07-19 00:00:00"
+    "published_at": "2025-07-19"
   },
   {
     "news_no": 16,
     "title": "社區植栽修剪作業",
     "category_no": 1,
     "content": "社區植栽修剪作業 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin002",
     "status": 0,
-    "upload_at": "2025-07-04 00:00:00"
+    "published_at": "2025-07-04"
   },
   {
     "news_no": 17,
     "title": "水塔清洗日提醒",
     "category_no": 4,
     "content": "水塔清洗日提醒 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin003",
     "status": 0,
-    "upload_at": "2025-07-15 00:00:00"
+    "published_at": "2025-07-15"
   },
   {
     "news_no": 18,
     "title": "鄰里資源回收宣導",
     "category_no": 4,
     "content": "鄰里資源回收宣導 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin004",
     "status": 2,
-    "upload_at": "2025-07-15 00:00:00"
+    "published_at": "2025-07-15"
   },
   {
     "news_no": 19,
     "title": "登革熱防治說明會",
     "category_no": 1,
     "content": "登革熱防治說明會 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin003",
     "status": 3,
-    "upload_at": "2025-07-22 00:00:00"
+    "published_at": "2025-07-22"
   },
   {
     "news_no": 20,
     "title": "活動預告：園遊會",
     "category_no": 2,
     "content": "活動預告：園遊會 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin003",
     "status": 3,
-    "upload_at": "2025-07-17 00:00:00"
+    "published_at": "2025-07-17"
   },
   {
     "news_no": 21,
     "title": "公告：電力系統檢修",
     "category_no": 4,
     "content": "公告：電力系統檢修 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin001",
     "status": 0,
-    "upload_at": "2025-07-06 00:00:00"
+    "published_at": "2025-07-06"
   },
   {
     "news_no": 22,
     "title": "防災演練集合地點",
     "category_no": 2,
     "content": "防災演練集合地點 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin003",
     "status": 3,
-    "upload_at": "2025-07-07 00:00:00"
+    "published_at": "2025-07-07"
   },
   {
     "news_no": 23,
     "title": "補助延長申請公告",
     "category_no": 3,
     "content": "補助延長申請公告 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin004",
     "status": 2,
-    "upload_at": "2025-07-04 00:00:00"
+    "published_at": "2025-07-04"
   },
   {
     "news_no": 24,
     "title": "社區防災手冊更新",
     "category_no": 1,
     "content": "社區防災手冊更新 詳細說明內容，請參閱社區網站公告區或洽管理室詢問。",
-    "upload_admin": "admin001",
     "status": 3,
-    "upload_at": "2025-07-23 00:00:00"
+    "published_at": "2025-07-23"
   }
 ]
