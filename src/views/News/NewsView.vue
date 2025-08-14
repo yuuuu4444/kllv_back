@@ -14,7 +14,6 @@
     { label: '已發布', value: 2 },
     { label: '已取消', value: 3 },
   ];
-
   const categoryOptions = [
     { label: '公告', value: 1 },
     { label: '活動', value: 2 },
@@ -33,7 +32,7 @@
         news_no: item.news_no,
         title: item.title,
         category_no: item.category_no,
-        category_label: categoryItem ? categoryItem.label : '未分類',
+        category_label: categoryItem.label,
         published_at: item.published_at,
         status: item.status,
       };
@@ -129,7 +128,6 @@
             <template #default="{ row }">
               <el-select
                 v-model="row.status"
-                placeholder="選擇狀態"
                 style="width: 140px"
               >
                 <el-option

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@/views/LogInView.vue';
 
 import NewsRoutes from '@/router/news';
+import EventsRoutes from '@/router/events';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,18 +32,6 @@ const router = createRouter({
       meta: { layout: 'default' },
     },
     {
-      path: '/events_content',
-      name: 'EventsContent',
-      component: () => import('@/views/Events/EventsContent.vue'),
-      meta: { layout: 'default' },
-    },
-    {
-      path: '/events_signup',
-      name: 'eventsSignup',
-      component: () => import('@/views/Events/EventsSignup.vue'),
-      meta: { layout: 'default' },
-    },
-    {
       path: '/repair',
       name: 'Repair',
       component: () => import('@/views/Repair/RepairView.vue'),
@@ -62,6 +51,7 @@ const router = createRouter({
     },
 
     ...NewsRoutes,
+    ...EventsRoutes,
   ],
 });
 

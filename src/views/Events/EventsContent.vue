@@ -3,49 +3,56 @@
   import { ref, computed } from 'vue';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/Events/activities_test.json';
+  import rawData from '@/assets/data/Events/events_test.json';
   import Pagination from '@/components/Pagination.vue';
+
+  const statusFilter = ref('');
+  const categoryFilter = ref('');
+
+  const statusOptions = [
+    { label: '未發布', value: 0 },
+    { label: '已發布', value: 2 },
+    { label: '已取消', value: 3 },
+  ];
+  const categoryOptions = [
+    { label: '旅遊', value: 1 },
+    { label: '健康', value: 2 },
+    { label: '藝文', value: 3 },
+    { label: '其他', value: 4 },
+  ];
+
+  const statusFilterOptions = [{ label: '全部', value: '' }, ...statusOptions];
+  const categoryFilterOptions = [{ label: '全部', value: '' }, ...categoryOptions];
 
   const tableData = ref(
     rawData.map((item, index) => {
-      let categories = '';
-      switch (item.category_no) {
-        case 1:
-          categories = '旅遊';
-          break;
-
-        case 2:
-          categories = '健康';
-          break;
-
-        case 3:
-          categories = '藝文';
-          break;
-
-        case 4:
-          categories = '其他';
-          break;
-
-        default:
-          categories = '未分類';
-          break;
-      }
+      const categoryItem = categoryOptions.find((c) => c.value === item.category_no);
       return {
-        activity_no: item.activity_no,
+        event_no: item.event_no,
         title: item.title,
-        categories: categories,
+        category_no: item.category_no,
+        category_label: categoryItem.label,
         start_date: item.start_date,
-        status: '未發布',
+        status: item.status,
       };
     }),
   );
+
+  const filteredTableData = computed(() => {
+    return tableData.value.filter((item) => {
+      const statusMatch = statusFilter.value === '' || item.status === statusFilter.value;
+      const categoryMatch =
+        categoryFilter.value === '' || item.category_no === categoryFilter.value;
+      return statusMatch && categoryMatch;
+    });
+  });
 
   const currentPage = ref(1);
   const pageSize = 12;
 
   const currentPageData = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
-    return tableData.value.slice(start, start + pageSize);
+    return filteredTableData.value.slice(start, start + pageSize);
   });
 </script>
 
@@ -56,12 +63,12 @@
         <div class="panel-filters">
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="statusFilter"
               placeholder="狀態"
               style="width: 240px"
             >
               <el-option
-                v-for="item in options"
+                v-for="item in statusFilterOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -70,12 +77,12 @@
           </div>
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="categoryFilter"
               placeholder="類型"
               style="width: 240px"
             >
               <el-option
-                v-for="item in options"
+                v-for="item in categoryFilterOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -83,6 +90,12 @@
             </el-select>
           </div>
         </div>
+        <RouterLink to="/events_content/edit">
+          <Button>
+            新增活動
+            <el-icon><Plus /></el-icon>
+          </Button>
+        </RouterLink>
       </div>
       <div class="table">
         <el-table
@@ -91,7 +104,7 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="activity_no"
+            prop="event_no"
             label="活動NO"
             width="100"
           />
@@ -100,7 +113,7 @@
             label="活動標題"
           />
           <el-table-column
-            prop="categories"
+            prop="category_label"
             label="活動類型"
           />
           <el-table-column
@@ -113,43 +126,37 @@
           >
             <template #default="{ row }">
               <el-select
-                v-model="row.狀態"
-                placeholder="選擇狀態"
+                v-model="row.status"
                 style="width: 140px"
               >
                 <el-option
-                  label="未發布"
-                  value="未發布"
-                />
-                <el-option
-                  label="已發布"
-                  value="已發布"
-                />
-                <el-option
-                  label="已取消"
-                  value="已取消"
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
                 />
               </el-select>
             </template>
           </el-table-column>
           <el-table-column
-            prop="操作"
+            prop="manipulate"
             label="操作"
             width="200"
           >
             <template #default="{ row }">
-              <el-button
-                icon="Edit"
-                circle
-                @click="handleEdit(row)"
-              />
+              <RouterLink :to="`/events_content/edit/${row.event_no}`">
+                <el-button
+                  icon="Edit"
+                  circle
+                />
+              </RouterLink>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="pagination">
         <Pagination
-          :total="tableData.length"
+          :total="filteredTableData.length"
           :page-size="pageSize"
           v-model:currentPage="currentPage"
         />
