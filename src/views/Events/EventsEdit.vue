@@ -340,9 +340,17 @@
       .daterange {
         width: 60%;
       }
-      .category,
-      .deadline {
+      .category {
         width: 30%;
+      }
+      .deadline {
+        width: 32%;
+      }
+      .deadline :deep(.el-date-editor) {
+        --el-date-editor-width: 100% !important;
+      }
+      .deadline :deep(.el-date-editor input) {
+        text-align: center;
       }
       .location {
         width: 50%;
