@@ -1,5 +1,5 @@
 <script setup>
-  import { RouterLink, RouterView } from 'vue-router';
+  import { RouterLink } from 'vue-router';
   import { ref, computed } from 'vue';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
@@ -7,13 +7,13 @@
   import Pagination from '@/components/Pagination.vue';
 
   const statusFilter = ref('');
-  const categoryFilter = ref('');
-
   const statusOptions = [
     { label: '未發布', value: 0 },
     { label: '已發布', value: 2 },
     { label: '已取消', value: 3 },
   ];
+
+  const categoryFilter = ref('');
   const categoryOptions = [
     { label: '公告', value: 1 },
     { label: '活動', value: 2 },
@@ -21,9 +21,6 @@
     { label: '施工', value: 4 },
     { label: '防災', value: 5 },
   ];
-
-  const statusFilterOptions = [{ label: '全部', value: '' }, ...statusOptions];
-  const categoryFilterOptions = [{ label: '全部', value: '' }, ...categoryOptions];
 
   const tableData = ref(
     rawData.map((item, index) => {
@@ -69,7 +66,7 @@
               style="width: 240px"
             >
               <el-option
-                v-for="item in statusFilterOptions"
+                v-for="item in statusOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -83,7 +80,7 @@
               style="width: 240px"
             >
               <el-option
-                v-for="item in categoryFilterOptions"
+                v-for="item in categoryOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
