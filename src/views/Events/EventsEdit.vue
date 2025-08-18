@@ -1,19 +1,16 @@
 <script setup>
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, onMounted } from 'vue'; // 移除computed
   import { useRouter } from 'vue-router';
   import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/Events/events_test.json';
+  // import rawData from '@/assets/data/Events/events_test.json'; // 假資料
   import QuillEditor from '@/components/QuillEditor.vue';
 
-  // 分類選項
-  const categoryOptions = [
-    { label: '旅遊', value: 1 },
-    { label: '健康', value: 2 },
-    { label: '藝文', value: 3 },
-    { label: '其他', value: 4 },
-  ];
+  // 引入環境變數 & 準備 ref
+  const { VITE_API_BASE } = import.meta.env;
+  const props = defineProps({ event_no: { type: [String, Number], default: null } });
+  const router = useRouter();
+  const isEditMode = !!props.event_no;
 
-  // 表單實例(Element Plus Form 標籤)
   const formRef = ref(null);
   const formData = ref({
     title: '',
@@ -23,12 +20,13 @@
     description: '',
     fee_per_person: '',
     p_limit: '',
-    daterange: '',
+    daterange: [], 
     reg_deadline: '',
-    created_at: getToday(),
   });
+  const categoryOptions = ref([]); // 分類選項將由 API 填充
+  const isLoading = ref(true); // 頁面載入狀態
+  const isSubmitting = ref(false); // 表單送出狀態
 
-  // 驗證規則(Element Plus Form 標籤)
   const rules = {
     title: [{ required: true, message: '請輸入標題', trigger: 'blur' }],
     category: [{ required: true, message: '請選擇類型', trigger: 'change' }],
@@ -41,46 +39,10 @@
     reg_deadline: [{ required: true, message: '請選擇日期', trigger: 'blur' }],
   };
 
-  // 編輯編號
-  const props = defineProps({
-    event_no: {
-      type: [String, Number],
-      default: null,
-    },
-  });
-
-  // 路由
-  const router = useRouter();
-
-  // 掛載初始資料
-  onMounted(() => {
-    // 編輯模式
-    if (props.event_no) {
-      // 從 rawData 中找到對應的消息資料
-      const eventsItem = rawData.find((item) => Number(item.event_no) === Number(props.event_no));
-      if (eventsItem) {
-        // 填入表單資料
-        formData.value.title = eventsItem.title || '';
-        formData.value.category = eventsItem.category_no || '';
-        formData.value.location = eventsItem.location || '';
-        formData.value.image = eventsItem.image || '';
-        formData.value.description = eventsItem.description || '';
-        formData.value.fee_per_person = eventsItem.fee_per_person || '';
-        formData.value.p_limit = eventsItem.p_limit || '';
-        formData.value.daterange = [eventsItem.start_date, eventsItem.end_date] || [];
-        formData.value.reg_deadline = eventsItem.reg_deadline || '';
-      } else {
-        // 找不到該筆消息資料，返回列表
-        alert('找不到該筆消息資料');
-        router.push('/events_content');
-      }
-    }
-  });
-
-  // imgBB API Key
+  // ImgBB API Key
   const imgBBApiKey = '85f73586dc14a612f501432fed339a45';
 
-  // 上傳圖片，串 imgBB API 取 url
+  // 上傳圖片函式
   async function uploadImage(file) {
     const form = new FormData();
     form.append('image', file);
@@ -92,7 +54,7 @@
       });
       const data = await res.json();
       if (data.success) {
-        formData.value.image = data.data.url; // 存到表單欄位
+        formData.value.image = data.data.url; // 將獲取到的圖片 URL 存到表單欄位
         alert('圖片上傳成功');
       } else {
         alert('圖片上傳失敗');
@@ -103,83 +65,118 @@
     }
   }
 
-  // 選擇圖片
+  // 觸發檔案選擇的函式
   function selectImage() {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    input.click();
-
     input.onchange = () => {
       const file = input.files?.[0];
       if (file) uploadImage(file);
     };
+    input.click();
   }
 
-  // 當前日期
-  function getToday() {
-    const now = new Date();
-    return now.toISOString().split('T')[0];
-  }
+  // 改造 onMounted 來獲取真實資料
+  onMounted(async () => {
+    isLoading.value = true;
+    try {
+      const catRes = await fetch(`${VITE_API_BASE}/events/events_categories_get.php`);
+      const catData = await catRes.json();
+      if (catData.status === 'success') {
+        categoryOptions.value = catData.data.map(c => ({ label: c.category_name, value: c.category_no }));
+      }
 
-  // 送出表單
-  function submitForm() {
-    // 驗證表單
-    formRef.value.validate((valid) => {
-      if (!valid) return;
-
-      const created_at = getToday();
-
-      // 編輯模式
-      if (props.event_no) {
-        const index = rawData.findIndex((item) => Number(item.event_no) === Number(props.event_no));
-        if (index !== -1) {
-          rawData[index] = {
-            ...rawData[index],
-            title: formData.value.title,
-            category_no: formData.value.category,
-            location: formData.value.location,
-            image: formData.value.image,
-            description: formData.value.description,
-            fee_per_person: formData.value.fee_per_person,
-            p_limit: formData.value.p_limit,
-            start_date: formData.value.daterange[0],
-            end_date: formData.value.daterange[1],
-            reg_deadline: formData.value.reg_deadline,
-            created_at,
-          };
+      if (isEditMode) {
+        // 優化：未來可以建立一支只撈一筆的 API
+        const eventsRes = await fetch(`${VITE_API_BASE}/events/events_get.php`);
+        const eventsData = await eventsRes.json();
+        if (eventsData.status === 'success') {
+          const eventItem = eventsData.data.find(item => Number(item.event_no) === Number(props.event_no));
+          if (eventItem) {
+            formData.value = {
+              title: eventItem.title,
+              category: eventItem.category_no,
+              location: eventItem.location,
+              image: eventItem.image || '',
+              description: eventItem.description,
+              fee_per_person: eventItem.fee_per_person,
+              p_limit: eventItem.p_limit,
+              daterange: [eventItem.start_date, eventItem.end_date],
+              reg_deadline: eventItem.reg_deadline,
+            };
+          } else {
+            alert('找不到該筆活動資料');
+            router.push('/events_content');
+          }
         }
       }
-      // 新增模式
-      else {
-        const newEvent = {
-          event_no: rawData.length ? Math.max(...rawData.map((n) => n.event_no)) + 1 : 1,
-          title: formData.value.title,
-          category_no: formData.value.category,
-          location: formData.value.location,
-          image: formData.value.image,
-          description: formData.value.description,
-          fee_per_person: formData.value.fee_per_person,
-          p_limit: formData.value.p_limit,
-          start_date: formData.value.daterange[0],
-          end_date: formData.value.daterange[1],
-          reg_deadline: formData.value.reg_deadline,
-          created_at,
-          status: 0,
-        };
-        rawData.push(newEvent);
+    } catch (error) {
+      console.error("載入編輯頁面時發生錯誤:", error);
+      alert("頁面載入失敗");
+    } finally {
+      isLoading.value = false;
+    }
+  });
+
+  // 改造 submitForm 來呼叫真實 API
+  async function submitForm() {
+    const valid = await formRef.value.validate();
+    if (!valid) return;
+
+    isSubmitting.value = true;
+    try {
+      let url;
+      let options;
+
+      if (isEditMode) {
+        url = `${VITE_API_BASE}/events/events_put.php?event_no=${props.event_no}`;
+        const bodyParams = new URLSearchParams();
+        for (const key in formData.value) {
+          if (key === 'daterange') {
+              bodyParams.append('daterange[]', formData.value.daterange[0]);
+              bodyParams.append('daterange[]', formData.value.daterange[1]);
+          } else {
+              bodyParams.append(key, formData.value[key]);
+          }
+        }
+        options = { method: 'PUT', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: bodyParams };
+      } else {
+        url = `${VITE_API_BASE}/events/events_post.php`;
+        const bodyData = new FormData();
+        for (const key in formData.value) {
+          if (key === 'daterange') {
+            bodyData.append('daterange[]', formData.value.daterange[0]);
+            bodyData.append('daterange[]', formData.value.daterange[1]);
+          } else {
+            bodyData.append(key, formData.value[key]);
+          }
+        }
+        options = { method: 'POST', body: bodyData };
       }
 
-      console.log('表單儲存成功', formData.value);
+      const res = await fetch(url, options);
+      const data = await res.json();
+
+      if (!res.ok || data.status !== 'success') {
+        throw new Error(data.message || '表單提交失敗');
+      }
+
+      alert(data.message);
       router.push('/events_content');
-      // 完成返回列表
-    });
+
+    } catch (error) {
+      console.error("提交表單時發生錯誤:", error);
+      alert(error.message);
+    } finally {
+      isSubmitting.value = false;
+    }
   }
 </script>
 
 <template>
   <el-container>
-    <el-main>
+    <el-main v-loading="isLoading">
       <el-form
         class="form"
         ref="formRef"
@@ -219,15 +216,16 @@
           <el-form-item
             class="input-group__item daterange"
             prop="daterange"
-            label="活動日期"
+            label="活動時間"
           >
             <el-date-picker
               v-model="formData.daterange"
               start-placeholder="起"
               range-separator="～"
               end-placeholder="迄"
-              value-format="YYYY-MM-DD"
-              type="daterange"
+              value-format="YYYY-MM-DD HH:mm"
+              format="YYYY-MM-DD HH:mm" 
+              type="datetimerange"
             />
           </el-form-item>
           <el-form-item
