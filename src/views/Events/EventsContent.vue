@@ -25,8 +25,8 @@
     isLoading.value = true;
     try {
       const [eventsRes, categoriesRes] = await Promise.all([
-        fetch(`${VITE_API_BASE}/api/events/events_get.php`),
-        fetch(`${VITE_API_BASE}/api/events/events_categories_get.php`),
+        fetch(`${VITE_API_BASE}/events/events_get.php`),
+        fetch(`${VITE_API_BASE}/events/events_categories_get.php`),
       ]);
 
       if (!eventsRes.ok || !categoriesRes.ok) throw new Error('API 請求失敗');
