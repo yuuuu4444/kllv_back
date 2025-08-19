@@ -1,56 +1,108 @@
 <script setup>
+  import { ref, computed, onMounted } from 'vue';
   import { RouterLink } from 'vue-router';
-  import { ref, computed } from 'vue';
+  import { ElMessage } from 'element-plus';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/News/news_test.json';
   import Pagination from '@/components/Pagination.vue';
 
-  const statusFilter = ref('');
+  const { VITE_API_BASE } = import.meta.env;
+
+  // 狀態資料
   const statusOptions = [
     { label: '未發布', value: 0 },
     { label: '已發布', value: 2 },
     { label: '已取消', value: 3 },
   ];
 
-  const categoryFilter = ref('');
-  const categoryOptions = [
-    { label: '公告', value: 1 },
-    { label: '活動', value: 2 },
-    { label: '補助', value: 3 },
-    { label: '施工', value: 4 },
-    { label: '防災', value: 5 },
-  ];
-
-  const tableData = ref(
-    rawData.map((item, index) => {
-      const categoryItem = categoryOptions.find((c) => c.value === item.category_no);
-      return {
-        news_no: item.news_no,
-        title: item.title,
-        category_no: item.category_no,
-        category_label: categoryItem.label,
-        published_at: item.published_at,
-        status: item.status,
-      };
-    }),
-  );
-
+  // 分類資料
+  const categoryOptions = ref([]);
+  const fetchNewsCategoryData = async () => {
+    try {
+      const res = await fetch(`${VITE_API_BASE}/news/categories_get.php`);
+      const data = await res.json();
+      
+      categoryOptions.value = data.data.map(item => {
+        return {
+          value: item.category_no,
+          label: item.category_name,
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  // 消息資料
+  const tableData = ref([]);
+  const fetchNewsData = async () => {
+    try {
+      const res = await fetch(`${VITE_API_BASE}/news/news_get.php`);
+      const data = await res.json();
+      
+      tableData.value = data.data.map(item => {
+        return {
+          news_no: item.news_no,
+          title: item.title,
+          category_no: item.category_no,
+          category_label: item.category_name,
+          published_at: item.published_at,
+          status: item.status,
+        };
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  // 過濾消息
+  const statusFilter = ref(null);
+  const categoryFilter = ref(null);
   const filteredTableData = computed(() => {
     return tableData.value.filter((item) => {
-      const statusMatch = statusFilter.value === '' || item.status === statusFilter.value;
-      const categoryMatch =
-        categoryFilter.value === '' || item.category_no === categoryFilter.value;
+      const statusMatch = item.status === statusFilter.value || !statusFilter.value;
+      const categoryMatch = item.category_no === categoryFilter.value || !categoryFilter.value;
       return statusMatch && categoryMatch;
     });
   });
 
+  // 設定分頁
   const currentPage = ref(1);
   const pageSize = 12;
 
   const currentPageData = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
     return filteredTableData.value.slice(start, start + pageSize);
+  });
+
+  // 更新狀態
+  const updateNewsPostsStatus = async (news_no, status) => {
+    try {
+      const res = await fetch(`${VITE_API_BASE}/news/status_post_update.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          news_no: news_no,
+          status: status,
+        }),
+      });
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        ElMessage.success('更新成功');
+      } else {
+        ElMessage.error('更新失敗');
+      }
+    } catch (error) {
+      console.error(error);
+      ElMessage.error('更新錯誤');
+    }
+  };
+
+  // onMounted
+  onMounted(async() => {
+    await fetchNewsData();
+    await fetchNewsCategoryData();
   });
 </script>
 
@@ -64,6 +116,7 @@
               v-model="statusFilter"
               placeholder="狀態"
               style="width: 240px"
+              clearable
             >
               <el-option
                 v-for="item in statusOptions"
@@ -78,6 +131,7 @@
               v-model="categoryFilter"
               placeholder="類型"
               style="width: 240px"
+              clearable
             >
               <el-option
                 v-for="item in categoryOptions"
@@ -126,6 +180,7 @@
               <el-select
                 v-model="row.status"
                 style="width: 140px"
+                @change="(status) => updateNewsPostsStatus(row.news_no, status)"
               >
                 <el-option
                   v-for="option in statusOptions"

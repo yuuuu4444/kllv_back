@@ -1,73 +1,92 @@
 <script setup>
   import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
+  import { ElMessage } from 'element-plus';
+  import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/News/news_test.json';
   import QuillEditor from '@/components/QuillEditor.vue';
 
-  // 分類選項
-  const categoryOptions = [
-    { label: '公告', value: 1 },
-    { label: '活動', value: 2 },
-    { label: '補助', value: 3 },
-    { label: '施工', value: 4 },
-    { label: '防災', value: 5 },
-  ];
-
-  // 表單實例(Element Plus Form 標籤)
-  const formRef = ref(null);
-  const formData = ref({
-    title: '',
-    category: '',
-    image: '',
-    content: '',
-    published_at: getToday(),
-  });
-
-  // 驗證規則(Element Plus Form 標籤)
-  const rules = {
-    title: [{ required: true, message: '請輸入標題', trigger: 'blur' }],
-    category: [{ required: true, message: '請選擇類型', trigger: 'change' }],
-    image: [{ required: true, message: '請上傳圖片', trigger: 'change' }],
-    content: [{ required: true, message: '請輸入內容', trigger: 'blur' }],
-  };
-
-  // 編輯編號
-  const props = defineProps({
-    news_no: {
-      type: [String, Number],
-      default: null,
-    },
-  });
+  const { VITE_API_BASE } = import.meta.env;
 
   // 路由
   const router = useRouter();
 
-  // 掛載初始資料
-  onMounted(() => {
-    // 編輯模式
-    if (props.news_no) {
-      // 從 rawData 中找到對應的消息資料
-      const newsItem = rawData.find((item) => Number(item.news_no) === Number(props.news_no));
-      if (newsItem) {
-        // 填入表單資料
-        formData.value.title = newsItem.title || '';
-        formData.value.category = newsItem.category_no || '';
-        formData.value.image = newsItem.image || '';
-        formData.value.content = newsItem.content || '';
-      } else {
-        // 找不到該筆消息資料，返回列表
-        alert('找不到該筆消息資料');
-        router.push('/news');
-      }
+  // 當前日期
+  const getToday = () => {
+    const now = new Date();
+    return now.toISOString().split('T')[0];
+  }
+  
+  // 分類資料
+  const categoryOptions = ref([]);
+  const fetchNewsCategoryData = async () => {
+    try {
+      const res = await fetch(`${VITE_API_BASE}/news/categories_get.php`);
+      const data = await res.json();
+      
+      categoryOptions.value = data.data.map(item => {
+        return {
+          value: item.category_no,
+          label: item.category_name,
+        }
+      });
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  // 消息編號
+  const props = defineProps({
+    news_no: {
+      type: Number,
+      default: null,
+    },
   });
+
+  // 消息資料
+  // 表單實例(Element Plus Form 標籤)
+  const formRef = ref(null);
+  const formData = ref({
+    title: '',
+    category_no: '',
+    image: '',
+    content: '',
+    published_at: getToday(),
+  });
+  const fetchNewsData = async () => {
+    if (!props.news_no) return;
+
+    try {
+      const res = await fetch(`${VITE_API_BASE}/news/news_get.php`);
+      const data = await res.json();
+
+      const item = data.data.find(i => i.news_no == props.news_no);
+      formData.value = {
+        title: item.title,
+        category_no: item.category_no,
+        image: item.image,
+        content: item.content,
+        published_at: item.published_at,
+      };
+    } catch (error) {
+      console.error(error);
+      router.push('/news');
+    }
+  };
+
+  // 驗證規則(Element Plus Form 標籤)
+  const rules = {
+    title: [{ required: true, message: '請輸入標題', trigger: 'blur' }],
+    category_no: [{ required: true, message: '請選擇類型', trigger: 'change' }],
+    image: [{ required: false, message: '請上傳圖片', trigger: 'change' }],
+    content: [{ required: true, message: '請輸入內容', trigger: 'blur' }],
+  };
 
   // imgBB API Key
   const imgBBApiKey = '85f73586dc14a612f501432fed339a45';
 
   // 上傳圖片，串 imgBB API 取 url
-  async function uploadImage(file) {
+  const uploadImage = async (file) => {
     const form = new FormData();
     form.append('image', file);
 
@@ -78,19 +97,19 @@
       });
       const data = await res.json();
       if (data.success) {
-        formData.value.image = data.data.url; // 存到表單欄位
-        alert('圖片上傳成功');
+        formData.value.image = data.data.url;
+        ElMessage.success('上傳成功');
       } else {
-        alert('圖片上傳失敗');
+        ElMessage.error('上傳失敗');
       }
     } catch (error) {
-      alert('圖片上傳錯誤');
+      ElMessage.error('上傳錯誤');
       console.error(error);
     }
   }
 
   // 選擇圖片
-  function selectImage() {
+  const selectImage = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -102,53 +121,56 @@
     };
   }
 
-  // 當前日期
-  function getToday() {
-    const now = new Date();
-    return now.toISOString().split('T')[0];
-  }
-
   // 送出表單
-  function submitForm() {
+  const submitForm = async () => {
     // 驗證表單
-    formRef.value.validate((valid) => {
+    formRef.value.validate(async (valid) => {
       if (!valid) return;
 
       const published_at = getToday();
 
-      // 編輯模式
-      if (props.news_no) {
-        const index = rawData.findIndex((item) => Number(item.news_no) === Number(props.news_no));
-        if (index !== -1) {
-          rawData[index] = {
-            ...rawData[index],
-            title: formData.value.title,
-            category_no: formData.value.category,
-            image: formData.value.image,
-            content: formData.value.content,
-            published_at,
-          };
-        }
-      }
-      // 新增模式
-      else {
-        const newNews = {
-          news_no: rawData.length ? Math.max(...rawData.map((n) => n.news_no)) + 1 : 1,
-          title: formData.value.title,
-          category_no: formData.value.category,
-          image: formData.value.image,
-          content: formData.value.content,
-          published_at,
-          status: 0,
-        };
-        rawData.push(newNews);
-      }
+      // 判斷是新增還是編輯
+      const apiUrl = props.news_no
+        ? `${VITE_API_BASE}/news/news_post_update.php`
+        : `${VITE_API_BASE}/news/news_post_create.php`;
 
-      console.log('表單儲存成功', formData.value);
-      router.push('/news');
-      // 完成返回列表
+      // 準備資料
+      const payload = {
+        news_no: Number(props.news_no), // 編輯模式
+        title: formData.value.title,
+        category_no: formData.value.category_no,
+        image: formData.value.image,
+        content: formData.value.content,
+        published_at,
+        status: 0,
+      };
+
+      try {
+        const res = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          ElMessage.success('更新成功');
+          router.push('/news');
+        } else {
+          ElMessage.error('更新失敗');
+        }
+      } catch (error) {
+        console.error(error);
+        ElMessage.error('更新錯誤');
+      }
     });
   }
+  
+  // onMounted
+  onMounted(async() => {
+    await fetchNewsData();
+    await fetchNewsCategoryData();
+  });
 </script>
 
 <template>
@@ -173,11 +195,11 @@
           </el-form-item>
           <el-form-item
             class="input-group__item category"
-            prop="category"
+            prop="category_no"
             label="消息類型"
           >
             <el-select
-              v-model="formData.category"
+              v-model="formData.category_no"
               placeholder="請選擇類型"
             >
               <el-option
@@ -193,7 +215,7 @@
           <el-form-item
             class="input-group__item image"
             prop="image"
-            label="消息圖片"
+            label="．消息圖片"
           >
             <el-input
               v-model="formData.image"
