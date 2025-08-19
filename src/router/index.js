@@ -3,6 +3,7 @@ import LoginView from '@/views/LogInView.vue';
 
 import NewsRoutes from '@/router/news';
 import EventsRoutes from '@/router/events';
+import RepairRoutes from '@/router/repair';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,12 +33,6 @@ const router = createRouter({
       meta: { layout: 'default' },
     },
     {
-      path: '/repair',
-      name: 'Repair',
-      component: () => import('@/views/Repair/RepairView.vue'),
-      meta: { layout: 'default' },
-    },
-    {
       path: '/village_chief',
       name: 'VillageChief',
       component: () => import('@/views/VillageChief/VillageChiefView.vue'),
@@ -52,6 +47,7 @@ const router = createRouter({
 
     ...NewsRoutes,
     ...EventsRoutes,
+    ...RepairRoutes,
   ],
 });
 
