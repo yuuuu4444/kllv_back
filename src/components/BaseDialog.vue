@@ -6,14 +6,19 @@
     title: String,
     width: {
       type: String,
-      default: '500px',
+      default: '800px',
     },
   });
 
-  const emit = defineEmits(['update:modelValue']);
+  const emit = defineEmits(['update:modelValue', 'close', 'closed']);
 
-  const close = () => {
-    emit('update:modelValue', false);
+  const handleClose = () => {
+    emit('update:modelValue', false); // 關閉對話框本身
+    emit('close'); // 告訴父層「已關閉」
+  };
+
+  const handleClosed = () => {
+    emit('closed'); // 動畫結束後再補一個（可選）
   };
 </script>
 
@@ -21,8 +26,10 @@
   <div class="dialog">
     <el-dialog
       :model-value="modelValue"
+      :width="width"
       align-center
-      @close="close"
+      @close="handleClose"
+      @closed="handleClosed"
     >
       <template #title>
         <div class="dialog__title">
