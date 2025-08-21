@@ -79,6 +79,31 @@
     }
   };
 
+  // 成員資料
+  const membersData = ref([]);
+
+  // 隱藏彈窗
+  const isDialogVisible = ref(false);
+
+  // 打開彈窗
+  const openDialog = async (row) => {
+    try {
+      const res = await fetch(
+        `${VITE_API_BASE}/api/login/members_get2.php?household_no=${row.household_no}`,
+      );
+      const data = await res.json();
+      if (data.status === 'success') {
+        membersData.value = data.data;
+        isDialogVisible.value = true;
+      } else {
+        ElMessage.error('查看失敗');
+      }
+    } catch (error) {
+      console.error(error);
+      ElMessage.error('查看錯誤');
+    }
+  };
+
   // onMounted
   onMounted(async () => {
     await fetchHouseholdsData();
@@ -163,7 +188,7 @@
             width="200"
           >
             <template #default="{ row }">
-              <el-button @click="handleEdit(row)">查看</el-button>
+              <el-button @click="openDialog(row)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -176,6 +201,46 @@
         />
       </div>
     </el-main>
+    <el-dialog
+      v-model="isDialogVisible"
+      title="戶籍成員資料"
+      width="1000px"
+    >
+      <el-table
+        :data="membersData"
+        border
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="user_id"
+          label="帳號"
+        />
+        <el-table-column
+          prop="fullname"
+          label="姓名"
+        />
+        <el-table-column
+          prop="gender"
+          label="性別"
+        />
+        <el-table-column
+          prop="birth_date"
+          label="出生日期"
+        />
+        <el-table-column
+          prop="id_number"
+          label="身分證字號"
+        />
+        <el-table-column
+          prop="phone_number"
+          label="電話"
+        />
+        <el-table-column
+          prop="email"
+          label="電子信箱"
+        />
+      </el-table>
+    </el-dialog>
   </el-container>
 </template>
 
