@@ -18,7 +18,7 @@
   const tableData = ref([]);
   const fetchHouseholdsData = async () => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/login/households_get2.php`);
+      const res = await fetch(`${VITE_API_BASE}/api//login/households_get2.php`);
       const data = await res.json();
 
       tableData.value = data.data.map((item) => {
@@ -58,7 +58,7 @@
   // 更新狀態
   const updateHouseholdsStatus = async (household_no, status) => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/login/status_post_update.php`, {
+      const res = await fetch(`${VITE_API_BASE}/api//login/status_post_update.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

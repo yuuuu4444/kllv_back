@@ -21,7 +21,7 @@
   const categoryOptions = ref([]);
   const fetchNewsCategoryData = async () => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/news/categories_get.php`);
+      const res = await fetch(`${VITE_API_BASE}/api//news/categories_get.php`);
       const data = await res.json();
 
       categoryOptions.value = data.data.map((item) => {
@@ -57,7 +57,7 @@
     if (!props.news_no) return;
 
     try {
-      const res = await fetch(`${VITE_API_BASE}/news/news_get2.php`);
+      const res = await fetch(`${VITE_API_BASE}/api//news/news_get2.php`);
       const data = await res.json();
 
       const item = data.data.find((i) => i.news_no == props.news_no);
@@ -129,8 +129,8 @@
 
       // 判斷是新增還是編輯
       const apiUrl = props.news_no
-        ? `${VITE_API_BASE}/news/news_post_update.php`
-        : `${VITE_API_BASE}/news/news_post_create.php`;
+        ? `${VITE_API_BASE}/api//news/news_post_update.php`
+        : `${VITE_API_BASE}/api//news/news_post_create.php`;
 
       // 準備資料
       const payload = {

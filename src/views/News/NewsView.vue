@@ -19,7 +19,7 @@
   const categoryOptions = ref([]);
   const fetchNewsCategoryData = async () => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/news/categories_get.php`);
+      const res = await fetch(`${VITE_API_BASE}/api//news/categories_get.php`);
       const data = await res.json();
 
       categoryOptions.value = data.data.map((item) => {
@@ -37,7 +37,7 @@
   const tableData = ref([]);
   const fetchNewsData = async () => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/news/news_get2.php`);
+      const res = await fetch(`${VITE_API_BASE}/api//news/news_get2.php`);
       const data = await res.json();
 
       tableData.value = data.data.map((item) => {
@@ -78,7 +78,7 @@
   // 更新狀態
   const updateNewsPostsStatus = async (news_no, status) => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/news/status_post_update.php`, {
+      const res = await fetch(`${VITE_API_BASE}/api//news/status_post_update.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
