@@ -21,26 +21,26 @@
     try {
       const res = await fetch(`${VITE_API_BASE}/news/categories_get.php`);
       const data = await res.json();
-      
-      categoryOptions.value = data.data.map(item => {
+
+      categoryOptions.value = data.data.map((item) => {
         return {
           value: item.category_no,
           label: item.category_name,
-        }
+        };
       });
     } catch (error) {
       console.error(error);
     }
   };
-  
+
   // 消息資料
   const tableData = ref([]);
   const fetchNewsData = async () => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/news/news_get.php`);
+      const res = await fetch(`${VITE_API_BASE}/news/news_get2.php`);
       const data = await res.json();
-      
-      tableData.value = data.data.map(item => {
+
+      tableData.value = data.data.map((item) => {
         return {
           news_no: item.news_no,
           title: item.title,
@@ -54,7 +54,7 @@
       console.error(error);
     }
   };
-  
+
   // 過濾消息
   const statusFilter = ref(null);
   const categoryFilter = ref(null);
@@ -100,7 +100,7 @@
   };
 
   // onMounted
-  onMounted(async() => {
+  onMounted(async () => {
     await fetchNewsData();
     await fetchNewsCategoryData();
   });
