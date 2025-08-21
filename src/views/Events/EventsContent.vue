@@ -25,8 +25,8 @@
     isLoading.value = true;
     try {
       const [eventsRes, categoriesRes] = await Promise.all([
-        fetch(`${VITE_API_BASE}/events/events_get.php`),
-        fetch(`${VITE_API_BASE}/events/events_categories_get.php`),
+        fetch(`${VITE_API_BASE}/api/events/events_get.php`),
+        fetch(`${VITE_API_BASE}/api/events/events_categories_get.php`),
       ]);
 
       if (!eventsRes.ok || !categoriesRes.ok) throw new Error('API 請求失敗');
@@ -36,7 +36,7 @@
 
       if (eventsData.status === 'success') {
         tableData.value = eventsData.data;
-      }
+      } 
       if (categoriesData.status === 'success') {
         categoryOptions.value = categoriesData.data.map(cat => ({
           label: cat.category_name,
