@@ -1,31 +1,87 @@
 <script setup>
-  import { RouterLink, RouterView } from 'vue-router';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
+  import { RouterLink } from 'vue-router';
+  import { ElMessage } from 'element-plus';
   import 'element-plus/dist/index.css';
-  import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/Users/households_test.json';
   import Pagination from '@/components/Pagination.vue';
 
-  const tableData = ref(
-    rawData.map((item, index) => {
-      return {
-        household_code: item.household_code,
-        address: item.address,
-        user: '王小明',
-        user_id: item.creator_user_id,
-        phone: '0987987987',
-        email: 'abc123@gmail.com',
-        status: '未認證',
-      };
-    }),
-  );
+  const { VITE_API_BASE } = import.meta.env;
 
+  // 狀態資料
+  const statusOptions = [
+    { label: '未認證', value: 0 },
+    { label: '已認證', value: 2 },
+    { label: '不通過', value: 3 },
+  ];
+
+  // 戶籍資料
+  const tableData = ref([]);
+  const fetchHouseholdsData = async () => {
+    try {
+      const res = await fetch(`${VITE_API_BASE}/login/households_get2.php`);
+      const data = await res.json();
+
+      tableData.value = data.data.map((item) => {
+        return {
+          household_no: item.household_no,
+          address: item.address,
+          creator_name: item.creator_name,
+          creator_id: item.creator_id,
+          phone_number: item.phone_number,
+          email: item.email,
+          status: item.status,
+        };
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 過濾戶籍
+  const statusFilter = ref(null);
+  const filteredTableData = computed(() => {
+    return tableData.value.filter((item) => {
+      const statusMatch = item.status === statusFilter.value || !statusFilter.value;
+      return statusMatch;
+    });
+  });
+
+  // 設定分頁
   const currentPage = ref(1);
   const pageSize = 12;
 
   const currentPageData = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
-    return tableData.value.slice(start, start + pageSize);
+    return filteredTableData.value.slice(start, start + pageSize);
+  });
+
+  // 更新狀態
+  const updateHouseholdsStatus = async (household_no, status) => {
+    try {
+      const res = await fetch(`${VITE_API_BASE}/login/status_post_update.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          household_no: household_no,
+          status: status,
+        }),
+      });
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        ElMessage.success('更新成功');
+      } else {
+        ElMessage.error('更新失敗');
+      }
+    } catch (error) {
+      console.error(error);
+      ElMessage.error('更新錯誤');
+    }
+  };
+
+  // onMounted
+  onMounted(async () => {
+    await fetchHouseholdsData();
   });
 </script>
 
@@ -36,26 +92,13 @@
         <div class="panel-filters">
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="statusFilter"
               placeholder="狀態"
               style="width: 240px"
+              clearable
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div>
-          <div class="table-filters__select">
-            <el-select
-              v-model="value"
-              placeholder="類型"
-              style="width: 240px"
-            >
-              <el-option
-                v-for="item in options"
+                v-for="item in statusOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -71,7 +114,7 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="household_code"
+            prop="household_no"
             label="戶籍NO"
             width="100"
           />
@@ -80,15 +123,15 @@
             label="戶籍地址"
           />
           <el-table-column
-            prop="user"
+            prop="creator_name"
             label="家長"
           />
           <el-table-column
-            prop="user_id"
+            prop="creator_id"
             label="帳號"
           />
           <el-table-column
-            prop="phone"
+            prop="phone_number"
             label="電話"
           />
           <el-table-column
@@ -101,21 +144,15 @@
           >
             <template #default="{ row }">
               <el-select
-                v-model="row.狀態"
-                placeholder="選擇狀態"
+                v-model="row.status"
                 style="width: 140px"
+                @change="(status) => updateHouseholdsStatus(row.household_no, status)"
               >
                 <el-option
-                  label="已認證"
-                  value="已認證"
-                />
-                <el-option
-                  label="未認證"
-                  value="未認證"
-                />
-                <el-option
-                  label="不通過"
-                  value="不通過"
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
                 />
               </el-select>
             </template>
@@ -133,7 +170,7 @@
       </div>
       <div class="pagination">
         <Pagination
-          :total="tableData.length"
+          :total="filteredTableData.length"
           :page-size="pageSize"
           v-model:currentPage="currentPage"
         />

@@ -41,7 +41,7 @@ const router = createRouter({
     {
       path: '/households',
       name: 'Households',
-      component: () => import('@/views/Households/Households.vue'),
+      component: () => import('@/views/Households/HouseholdsView.vue'),
       meta: { layout: 'default' },
     },
 
