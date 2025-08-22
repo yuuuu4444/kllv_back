@@ -81,7 +81,7 @@
   onMounted(async () => {
     isLoading.value = true;
     try {
-      const catRes = await fetch(`${VITE_API_BASE}/events/events_categories_get.php`);
+      const catRes = await fetch(`${VITE_API_BASE}/api/events/events_categories_get.php`);
       const catData = await catRes.json();
       if (catData.status === 'success') {
         categoryOptions.value = catData.data.map(c => ({ label: c.category_name, value: c.category_no }));
@@ -89,7 +89,7 @@
 
       if (isEditMode) {
         // 優化：未來可以建立一支只撈一筆的 API
-        const eventsRes = await fetch(`${VITE_API_BASE}/events/events_get.php`);
+        const eventsRes = await fetch(`${VITE_API_BASE}/api/events/events_get.php`);
         const eventsData = await eventsRes.json();
         if (eventsData.status === 'success') {
           const eventItem = eventsData.data.find(item => Number(item.event_no) === Number(props.event_no));
@@ -130,7 +130,7 @@
       let options;
 
       if (isEditMode) {
-        url = `${VITE_API_BASE}/events/events_put.php?event_no=${props.event_no}`;
+        url = `${VITE_API_BASE}/api/events/events_put.php?event_no=${props.event_no}`;
         const bodyParams = new URLSearchParams();
         for (const key in formData.value) {
           if (key === 'daterange') {

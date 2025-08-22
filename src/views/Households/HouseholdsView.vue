@@ -3,50 +3,32 @@
   import { RouterLink } from 'vue-router';
   import { ElMessage } from 'element-plus';
   import 'element-plus/dist/index.css';
-  import Button from '@/components/Button.vue';
   import Pagination from '@/components/Pagination.vue';
 
   const { VITE_API_BASE } = import.meta.env;
 
   // 狀態資料
   const statusOptions = [
-    { label: '未發布', value: 0 },
-    { label: '已發布', value: 2 },
-    { label: '已取消', value: 3 },
+    { label: '未認證', value: 0 },
+    { label: '已認證', value: 2 },
+    { label: '不通過', value: 3 },
   ];
 
-  // 分類資料
-  const categoryOptions = ref([]);
-  const fetchNewsCategoryData = async () => {
-    try {
-      const res = await fetch(`${VITE_API_BASE}/api//news/categories_get.php`);
-      const data = await res.json();
-
-      categoryOptions.value = data.data.map((item) => {
-        return {
-          value: item.category_no,
-          label: item.category_name,
-        };
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // 消息資料
+  // 戶籍資料
   const tableData = ref([]);
-  const fetchNewsData = async () => {
+  const fetchHouseholdsData = async () => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/api//news/news_get2.php`);
+      const res = await fetch(`${VITE_API_BASE}/api//login/households_get2.php`);
       const data = await res.json();
 
       tableData.value = data.data.map((item) => {
         return {
-          news_no: item.news_no,
-          title: item.title,
-          category_no: item.category_no,
-          category_label: item.category_name,
-          published_at: item.published_at,
+          household_no: item.household_no,
+          address: item.address,
+          creator_name: item.creator_name,
+          creator_id: item.creator_id,
+          phone_number: item.phone_number,
+          email: item.email,
           status: item.status,
         };
       });
@@ -55,14 +37,12 @@
     }
   };
 
-  // 過濾消息
+  // 過濾戶籍
   const statusFilter = ref(null);
-  const categoryFilter = ref(null);
   const filteredTableData = computed(() => {
     return tableData.value.filter((item) => {
       const statusMatch = item.status === statusFilter.value || !statusFilter.value;
-      const categoryMatch = item.category_no === categoryFilter.value || !categoryFilter.value;
-      return statusMatch && categoryMatch;
+      return statusMatch;
     });
   });
 
@@ -76,13 +56,13 @@
   });
 
   // 更新狀態
-  const updateNewsPostsStatus = async (news_no, status) => {
+  const updateHouseholdsStatus = async (household_no, status) => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/api//news/status_post_update.php`, {
+      const res = await fetch(`${VITE_API_BASE}/api//login/status_post_update.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          news_no: news_no,
+          household_no: household_no,
           status: status,
         }),
       });
@@ -99,10 +79,34 @@
     }
   };
 
+  // 成員資料
+  const membersData = ref([]);
+
+  // 隱藏彈窗
+  const isDialogVisible = ref(false);
+
+  // 打開彈窗
+  const openDialog = async (row) => {
+    try {
+      const res = await fetch(
+        `${VITE_API_BASE}/api/login/members_get2.php?household_no=${row.household_no}`,
+      );
+      const data = await res.json();
+      if (data.status === 'success') {
+        membersData.value = data.data;
+        isDialogVisible.value = true;
+      } else {
+        ElMessage.error('查看失敗');
+      }
+    } catch (error) {
+      console.error(error);
+      ElMessage.error('查看錯誤');
+    }
+  };
+
   // onMounted
   onMounted(async () => {
-    await fetchNewsData();
-    await fetchNewsCategoryData();
+    await fetchHouseholdsData();
   });
 </script>
 
@@ -126,28 +130,7 @@
               />
             </el-select>
           </div>
-          <div class="table-filters__select">
-            <el-select
-              v-model="categoryFilter"
-              placeholder="類型"
-              style="width: 240px"
-              clearable
-            >
-              <el-option
-                v-for="item in categoryOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div>
         </div>
-        <RouterLink to="/news/edit">
-          <Button>
-            新增消息
-            <el-icon><Plus /></el-icon>
-          </Button>
-        </RouterLink>
       </div>
       <div class="table">
         <el-table
@@ -156,21 +139,29 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="news_no"
-            label="消息NO"
+            prop="household_no"
+            label="戶籍NO"
             width="100"
           />
           <el-table-column
-            prop="title"
-            label="消息標題"
+            prop="address"
+            label="戶籍地址"
           />
           <el-table-column
-            prop="category_label"
-            label="消息類型"
+            prop="creator_name"
+            label="家長"
           />
           <el-table-column
-            prop="published_at"
-            label="消息日期"
+            prop="creator_id"
+            label="帳號"
+          />
+          <el-table-column
+            prop="phone_number"
+            label="電話"
+          />
+          <el-table-column
+            prop="email"
+            label="電子信箱"
           />
           <el-table-column
             prop="status"
@@ -180,7 +171,7 @@
               <el-select
                 v-model="row.status"
                 style="width: 140px"
-                @change="(status) => updateNewsPostsStatus(row.news_no, status)"
+                @change="(status) => updateHouseholdsStatus(row.household_no, status)"
               >
                 <el-option
                   v-for="option in statusOptions"
@@ -192,17 +183,12 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="manipulate"
-            label="操作"
+            prop="詳細"
+            label="詳細"
             width="200"
           >
             <template #default="{ row }">
-              <RouterLink :to="`/news/edit/${row.news_no}`">
-                <el-button
-                  icon="Edit"
-                  circle
-                />
-              </RouterLink>
+              <el-button @click="openDialog(row)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -215,6 +201,46 @@
         />
       </div>
     </el-main>
+    <el-dialog
+      v-model="isDialogVisible"
+      title="戶籍成員資料"
+      width="1000px"
+    >
+      <el-table
+        :data="membersData"
+        border
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="user_id"
+          label="帳號"
+        />
+        <el-table-column
+          prop="fullname"
+          label="姓名"
+        />
+        <el-table-column
+          prop="gender"
+          label="性別"
+        />
+        <el-table-column
+          prop="birth_date"
+          label="出生日期"
+        />
+        <el-table-column
+          prop="id_number"
+          label="身分證字號"
+        />
+        <el-table-column
+          prop="phone_number"
+          label="電話"
+        />
+        <el-table-column
+          prop="email"
+          label="電子信箱"
+        />
+      </el-table>
+    </el-dialog>
   </el-container>
 </template>
 

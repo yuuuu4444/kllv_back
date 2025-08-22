@@ -15,20 +15,20 @@
   const getToday = () => {
     const now = new Date();
     return now.toISOString().split('T')[0];
-  }
-  
+  };
+
   // 分類資料
   const categoryOptions = ref([]);
   const fetchNewsCategoryData = async () => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/news/categories_get.php`);
+      const res = await fetch(`${VITE_API_BASE}/api//news/categories_get.php`);
       const data = await res.json();
-      
-      categoryOptions.value = data.data.map(item => {
+
+      categoryOptions.value = data.data.map((item) => {
         return {
           value: item.category_no,
           label: item.category_name,
-        }
+        };
       });
     } catch (error) {
       console.error(error);
@@ -57,10 +57,10 @@
     if (!props.news_no) return;
 
     try {
-      const res = await fetch(`${VITE_API_BASE}/news/news_get.php`);
+      const res = await fetch(`${VITE_API_BASE}/api//news/news_get2.php`);
       const data = await res.json();
 
-      const item = data.data.find(i => i.news_no == props.news_no);
+      const item = data.data.find((i) => i.news_no == props.news_no);
       formData.value = {
         title: item.title,
         category_no: item.category_no,
@@ -106,7 +106,7 @@
       ElMessage.error('上傳錯誤');
       console.error(error);
     }
-  }
+  };
 
   // 選擇圖片
   const selectImage = () => {
@@ -119,7 +119,7 @@
       const file = input.files?.[0];
       if (file) uploadImage(file);
     };
-  }
+  };
 
   // 送出表單
   const submitForm = async () => {
@@ -127,12 +127,10 @@
     formRef.value.validate(async (valid) => {
       if (!valid) return;
 
-      const published_at = getToday();
-
       // 判斷是新增還是編輯
       const apiUrl = props.news_no
-        ? `${VITE_API_BASE}/news/news_post_update.php`
-        : `${VITE_API_BASE}/news/news_post_create.php`;
+        ? `${VITE_API_BASE}/api//news/news_post_update.php`
+        : `${VITE_API_BASE}/api//news/news_post_create.php`;
 
       // 準備資料
       const payload = {
@@ -141,7 +139,7 @@
         category_no: formData.value.category_no,
         image: formData.value.image,
         content: formData.value.content,
-        published_at,
+        published_at: formData.value.published_at,
         status: 0,
       };
 
@@ -164,10 +162,10 @@
         ElMessage.error('更新錯誤');
       }
     });
-  }
-  
+  };
+
   // onMounted
-  onMounted(async() => {
+  onMounted(async () => {
     await fetchNewsData();
     await fetchNewsCategoryData();
   });
