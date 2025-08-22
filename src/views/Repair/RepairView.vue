@@ -6,6 +6,7 @@
   import Pagination from '@/components/Pagination.vue';
   import BaseDialog from '@/components/BaseDialog.vue';
 
+  const { VITE_API_BASE } = import.meta.env;
   const buttonColor = ref('#004b80');
   const textColor = ref('#fff');
   const showDialog = ref(false);
@@ -23,9 +24,7 @@
   onMounted(async () => {
     loadingCats.value = true;
     try {
-      const res = await fetch(
-        `http://localhost:8888/kllv_backend_php/api/repair/categories_get.php`,
-      );
+      const res = await fetch(`${VITE_API_BASE}/repair/categories_get.php`);
       const data = await res.json();
 
       // console.log(data.status);
@@ -74,7 +73,7 @@
   const reports = ref([]);
 
   onMounted(async () => {
-    const res = await fetch(`http://localhost:8888/kllv_backend_php/api/repair/repair_get.php`);
+    const res = await fetch(`${VITE_API_BASE}/repair/repair_get.php`);
     const raw = await res.json();
 
     const data = raw.data || [];
@@ -122,7 +121,7 @@
 
   async function saveStatus(row, newStatus) {
     try {
-      const res = await fetch('http://localhost:8888/kllv_backend_php/api/repair/reply_save.php', {
+      const res = await fetch(`${VITE_API_BASE}/repair/reply_save.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
@@ -193,7 +192,7 @@
     try {
       isSavingReply.value = true;
 
-      const res = await fetch('http://localhost:8888/kllv_backend_php/api/repair/reply_save.php', {
+      const res = await fetch(`${VITE_API_BASE}/repair/reply_save.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({

@@ -6,7 +6,7 @@
   const route = useRoute();
 </script>
 
-<template>
+<!-- <template>
   <RouterView v-if="route.meta.layout === 'none'" />
   <div
     v-else
@@ -14,10 +14,33 @@
   >
     <Header></Header>
     <el-container>
-      <Nav></Nav>
+      <Nav v-if="route.path !== '/Dashboard'" ></Nav>
       <el-container>
         <el-main>
           <RouterView></RouterView>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
+</template> -->
+<template>
+  <!--  如果 layout 是 none，就只顯示 <RouterView /> -->
+  <RouterView v-if="route.meta.layout === 'none'" />
+
+  <!--  如果 layout 是 header-only，就只顯示 Header + RouterView -->
+  <div v-else-if="route.meta.layout === 'header-only'" class="header-only-layout">
+    <Header />
+    <RouterView />
+  </div>
+
+  <!--  預設 Layout：Header + Nav + el-container -->
+  <div v-else class="common-layout">
+    <Header />
+    <el-container>
+      <Nav />
+      <el-container>
+        <el-main>
+          <RouterView />
         </el-main>
       </el-container>
     </el-container>
@@ -35,3 +58,19 @@
     box-sizing: border-box;
   }
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

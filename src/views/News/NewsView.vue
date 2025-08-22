@@ -37,7 +37,7 @@
   const tableData = ref([]);
   const fetchNewsData = async () => {
     try {
-      const res = await fetch(`${VITE_API_BASE}/api//news/news_get2.php`);
+      const res = await fetch(`${VITE_API_BASE}/news/news_get2.php`);
       const data = await res.json();
 
       tableData.value = data.data.map((item) => {
