@@ -1,6 +1,23 @@
 <script setup>
   import { RouterLink } from 'vue-router';
+  import { computed, onMounted } from 'vue';
+  import { storeToRefs } from 'pinia';
+  import { useAuthStore } from '@/stores/auth';
   import 'element-plus/dist/index.css';
+
+  const auth = useAuthStore();
+  const { admin } = storeToRefs(auth);
+
+  // 重新整理後若 Pinia 清空，可補打一遍 me.php
+  onMounted(async () => {
+    if (!admin.value) await auth.fetchMe();
+  });
+
+  const fullname = computed(() =>
+    admin.value && admin.value.fullname ? admin.value.fullname : '—',
+  );
+
+  const adminId = computed(() => (admin.value && admin.value.admin_id ? admin.value.admin_id : ''));
 </script>
 
 <template>
@@ -12,8 +29,8 @@
           alt="avatar_pic"
         />
       </el-avatar>
-      <p>里長</p>
-      <p>ABC123</p>
+      <p>{{ fullname }}</p>
+      <p>{{ adminId }}</p>
     </div>
     <el-row class="tac">
       <el-col :span="12">

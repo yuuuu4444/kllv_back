@@ -57,7 +57,7 @@
     if (!props.news_no) return;
 
     try {
-      const res = await fetch(`${VITE_API_BASE}/api//news/news_get2.php`);
+      const res = await fetch(`${VITE_API_BASE}/news/news_get2.php`);
       const data = await res.json();
 
       const item = data.data.find((i) => i.news_no == props.news_no);
