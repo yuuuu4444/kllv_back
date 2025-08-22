@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = '';
       try {
-        const res = await fetch(`${VITE_API_BASE}/admin/login_post.php`, {
+        const res = await fetch(`${VITE_API_BASE}/api/admin/login_post.php`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password }),
@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('auth', {
 
     async fetchMe() {
       try {
-        const res = await fetch(`${VITE_API_BASE}/admin/me.php`, {
+        const res = await fetch(`${VITE_API_BASE}/api/admin/me.php`, {
           credentials: 'include',
         });
         if (!res.ok) {
@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
-      await fetch(`${VITE_API_BASE}/admin/logout.php`, { credentials: 'include' });
+      await fetch(`${VITE_API_BASE}/api/admin/logout.php`, { credentials: 'include' });
       this.admin = null;
     },
   },
