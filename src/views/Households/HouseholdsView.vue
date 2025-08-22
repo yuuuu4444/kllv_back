@@ -1,6 +1,5 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue';
-  import { RouterLink } from 'vue-router';
   import { ElMessage } from 'element-plus';
   import 'element-plus/dist/index.css';
   import Pagination from '@/components/Pagination.vue';
