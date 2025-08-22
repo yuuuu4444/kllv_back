@@ -44,6 +44,12 @@ const router = createRouter({
       component: () => import('@/views/Households/Households.vue'),
       meta: { layout: 'default' },
     },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/Dashboard/Dashboard.vue'),
+      meta: { layout: 'header-only' },
+    },
 
     ...NewsRoutes,
     ...EventsRoutes,
