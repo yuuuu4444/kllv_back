@@ -5,6 +5,6 @@ export default [
     path: '/repair',
     name: 'Repair',
     component: RepairView,
-    meta: { layout: 'default' },
+    meta: { layout: 'default', requiresAuth: true },
   },
 ];
