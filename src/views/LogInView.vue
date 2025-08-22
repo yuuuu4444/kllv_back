@@ -1,12 +1,18 @@
 <script setup>
-  import { RouterLink, RouterView, useRouter } from 'vue-router';
+  import { useRouter, useRoute } from 'vue-router';
   import Header from '@/components/Header.vue';
   import { ref } from 'vue';
   import { ElMessage } from 'element-plus';
+  import { useAuthStore } from '@/stores/auth';
+
   const buttonColor = ref('#004b80');
   const textColor = ref('#fff');
-  const router = useRouter();
 
+  const router = useRouter();
+  const route = useRoute();
+  const auth = useAuthStore();
+
+  const formRef = ref();
   const form = ref({
     username: '',
     password: '',
@@ -17,15 +23,22 @@
     password: [{ required: true, message: '請輸入密碼', trigger: 'blur' }],
   };
 
-  const formRef = ref();
-
   const handleLogin = () => {
-    formRef.value.validate((valid) => {
-      if (valid) {
+    formRef.value?.validate(async (valid) => {
+      if (!valid) return ElMessage.error('請完整填寫表單');
+
+      const ok = await auth.login({
+        username: form.value.username.trim(),
+        password: form.value.password,
+      });
+
+      if (ok) {
         ElMessage.success('登入成功');
-        router.push('/admin');
+        const redirect =
+          typeof route.query.redirect === 'string' ? route.query.redirect : '/village_chief';
+        router.replace(redirect); // 用 replace 避免返回鍵回到登入頁
       } else {
-        ElMessage.error('請完整填寫表單');
+        ElMessage.error(auth.error || '登入失敗');
       }
     });
   };
@@ -45,12 +58,16 @@
               :rules="rules"
               label-width="0"
               label-position="top"
+              @keydown.enter.prevent="handleLogin"
             >
               <el-form-item
                 label="帳號"
                 prop="username"
               >
-                <el-input v-model="form.username" />
+                <el-input
+                  v-model="form.username"
+                  autocomplete="username"
+                />
               </el-form-item>
               <el-form-item
                 label="密碼"
@@ -59,7 +76,8 @@
                 <el-input
                   v-model="form.password"
                   type="password"
-                  autocomplete="off"
+                  autocomplete="current-password"
+                  show-password
                 />
               </el-form-item>
               <el-form-item>
@@ -69,6 +87,8 @@
                     backgroundColor: buttonColor,
                     color: textColor,
                   }"
+                  :loading="auth.loading"
+                  :disabled="auth.loading"
                   @click="handleLogin"
                   class="login-btn"
                 >
