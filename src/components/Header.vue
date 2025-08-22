@@ -33,9 +33,6 @@
         alt="logo"
       />
     </div>
-    <div v-if="route.path !== '/' && route.path !== '/login'">
-      <RouterLink to="/Dashboard"><el-button>儀表板</el-button></RouterLink>
-      <RouterLink to="/admin"><el-button>資料管理</el-button></RouterLink>
     <div v-if="showLogout">
       <el-button @click="handleLogout">登出</el-button>
     </div>
@@ -56,22 +53,20 @@
       font-size: 20px;
     }
   }
-  .el-button{
+  .el-button {
     text-decoration: none;
     color: white;
-      background-color: transparent;
-      border: none;
-      font-size: 20px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
 
-        &:hover{
-        background-color: white;
-        color: #004b80;
-      }
-      
+    &:hover {
+      background-color: white;
+      color: #004b80;
+    }
   }
   //  a{
   //   text-decoration: none;
   //   color: white;
   //  }
-
 </style>
