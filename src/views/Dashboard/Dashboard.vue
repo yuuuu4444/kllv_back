@@ -41,11 +41,11 @@ import NewsChart from '@/components/NewsChart.vue';
         </div>
     </div>
     </div>
-    <div class="RepairBoard">
+    <!-- <div class="RepairBoard">
         <div class="RepairBoard__title">
             <h1>維修概況</h1>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <style scoped lang="scss">
@@ -79,7 +79,7 @@ template{
         margin: 0 3vw;
     }
     .CommunityBoard{
-        width: 1620px;
+        width: 1280px;
         height: 520px;
         text-align: center;
         border-radius: 50px;
@@ -101,12 +101,12 @@ template{
                 margin: 20px 30px;
             }
                 &__article{
-                    width: 710px;
+                    width: 680px;
                     height: 470px;
                     text-align: start;
                 }
                 &__comment{
-                    width: 710px;
+                    width: 680px;
                     height: 470px;
                     text-align: start;
                 }

@@ -6,7 +6,7 @@
   const route = useRoute();
 </script>
 
-<!-- <template>
+<template>
   <RouterView v-if="route.meta.layout === 'none'" />
   <div
     v-else
@@ -22,30 +22,30 @@
       </el-container>
     </el-container>
   </div>
-</template> -->
-<template>
+</template>
+<!-- <template> -->
   <!--  如果 layout 是 none，就只顯示 <RouterView /> -->
-  <RouterView v-if="route.meta.layout === 'none'" />
+  <!-- <RouterView v-if="route.meta.layout === 'none'"></RouterView> -->
 
   <!--  如果 layout 是 header-only，就只顯示 Header + RouterView -->
-  <div v-else-if="route.meta.layout === 'header-only'" class="header-only-layout">
-    <Header />
-    <RouterView />
-  </div>
+  <!-- <div v-else-if="route.meta.layout === 'header-only'" class="header-only-layout">
+    <Header></Header>
+    <RouterView></RouterView>
+  </div> -->
 
   <!--  預設 Layout：Header + Nav + el-container -->
-  <div v-else class="common-layout">
-    <Header />
+  <!-- <div v-else class="common-layout">
+    <Header></Header>
     <el-container>
-      <Nav />
+      <Nav></Nav>
       <el-container>
         <el-main>
-          <RouterView />
+          <RouterView></RouterView>
         </el-main>
       </el-container>
     </el-container>
   </div>
-</template>
+</template> -->
 
 <style scoped lang="scss">
   .common-layout {
@@ -57,6 +57,10 @@
     padding: 0;
     box-sizing: border-box;
   }
+  .header-only-layout {
+  height: 100vh;
+  background-color: #fff; // 可選：避免 layout 閃爍
+}
 </style>
 
 
