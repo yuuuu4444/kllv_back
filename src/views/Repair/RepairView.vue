@@ -24,7 +24,7 @@
   onMounted(async () => {
     loadingCats.value = true;
     try {
-      const res = await fetch(`${VITE_API_BASE}/repair/categories_get.php`);
+      const res = await fetch(`${VITE_API_BASE}/api/repair/categories_get.php`);
       const data = await res.json();
 
       // console.log(data.status);
@@ -73,7 +73,7 @@
   const reports = ref([]);
 
   onMounted(async () => {
-    const res = await fetch(`${VITE_API_BASE}/repair/repair_get.php`);
+    const res = await fetch(`${VITE_API_BASE}/api/repair/repair_get.php`);
     const raw = await res.json();
 
     const data = raw.data || [];
@@ -88,6 +88,9 @@
         repair_no: r.repair_no,
         repair_code: r.repair_code,
         description: r.description,
+        reporter_id: r.reporter_id,
+        reporter_name: r.reporter_name,
+        reporter_phone: r.reporter_phone,
       };
     });
     console.log('[reports sample]', reports.value.slice(0, 3));
@@ -121,7 +124,7 @@
 
   async function saveStatus(row, newStatus) {
     try {
-      const res = await fetch(`${VITE_API_BASE}/repair/reply_save.php`, {
+      const res = await fetch(`${VITE_API_BASE}/api/repair/reply_save.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
@@ -192,7 +195,7 @@
     try {
       isSavingReply.value = true;
 
-      const res = await fetch(`${VITE_API_BASE}/repair/reply_save.php`, {
+      const res = await fetch(`${VITE_API_BASE}/api/repair/reply_save.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
@@ -231,7 +234,7 @@
       .filter(Boolean)
       .map((p) => {
         if (p.startsWith('http')) return p; // 完整 URL
-        return `http://localhost:8888/kllv_backend_php${p}`;
+        return `${VITE_API_BASE}${p}`;
       });
   });
 
@@ -240,14 +243,11 @@
     selectedRepair.value = { ...row, _loading: true };
 
     try {
-      const res = await fetch(
-        `http://localhost:8888/kllv_backend_php/api/repair/repair_detail_get.php`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ repair_no: Number(row.repair_no) }),
-        },
-      );
+      const res = await fetch(`${VITE_API_BASE}/api/repair/repair_detail_get.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ repair_no: Number(row.repair_no) }),
+      });
       if (!res.ok) {
         const txt = await res.text();
         throw new Error(`HTTP ${res.status} - ${txt}`);
@@ -328,11 +328,11 @@
             width="100"
           />
           <el-table-column
-            prop="user"
+            prop="reporter_name"
             label="通報人"
           />
           <el-table-column
-            prop="phone"
+            prop="reporter_phone"
             label="聯絡電話"
           />
           <el-table-column

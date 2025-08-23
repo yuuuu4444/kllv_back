@@ -1,11 +1,105 @@
 <script setup>
   import { RouterLink, RouterView } from 'vue-router';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
   import rawData from '@/assets/data/Community/post_reports_test.json';
   import Pagination from '@/components/Pagination.vue';
 
+  const { VITE_API_BASE } = import.meta.env;
+  const loading = ref(false);
+  const error = ref('');
+
+  const loadingCats = ref(false);
+  const categories = ref([]);
+  const tableData = ref([]);
+
+  onMounted(async () => {
+    loadingCats.value = true;
+    try {
+      const res = await fetch(`${VITE_API_BASE}/api/community/report_categories_get.php`);
+      const data = await res.json();
+
+      // console.log(data.status);
+      if (data.status === 'success') categories.value = data.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loadingCats.value = false;
+    }
+  });
+
+  const STATUS = { PENDING: 0, DONE: 2, REJECTED: 3 };
+  const toStatusText = (code) => {
+    const n = Number(code);
+    switch (n) {
+      case STATUS.PENDING:
+        return '未審理';
+      case STATUS.DONE:
+        return '已審理';
+      case STATUS.REJECTED:
+        return '不受理';
+      default:
+        return '未審理';
+    }
+  };
+
+  const sanitizeStatus = (code) => {
+    const n = Number(code);
+    switch (n) {
+      case STATUS.PENDING:
+      case STATUS.DONE:
+      case STATUS.REJECTED:
+        return n;
+      default:
+        return STATUS.PENDING;
+    }
+  };
+
+  const statusOptions = [
+    { label: toStatusText(STATUS.PENDING), value: STATUS.PENDING },
+    { label: toStatusText(STATUS.DONE), value: STATUS.DONE },
+    { label: toStatusText(STATUS.REJECTED), value: STATUS.REJECTED },
+  ];
+
+  onMounted(async () => {
+    const res = await fetch(`${VITE_API_BASE}/api/community/post_report_get.php`);
+    const raw = await res.json();
+
+    const data = raw.data || [];
+
+    tableData.value = data.map((r) => {
+      const process_status = sanitizeStatus(r.status);
+      return {
+        ...r,
+        category_no: r.category_no,
+        reason: r.category_name, // 顯示用
+        process_status,
+        report_no: r.report_no,
+        reported_title: r.title,
+        reporter_id: r.reporter_id,
+        reported_at: r.reported_at,
+      };
+    });
+    console.log('[reports sample]', tableData.value.slice(0, 3));
+    console.log('[categories raw]', categories.value);
+  });
+
+  const selectedStatus = ref(''); // 狀態下拉
+  const selectedReason = ref(''); // 原因下拉
+
+  const filteredReports = computed(() => {
+    return tableData.value.filter((r) => {
+      // 分類篩選
+      const matchReason = !selectedReason.value || r.category_no == selectedReason.value;
+      // 狀態篩選
+      const matchStatus =
+        selectedStatus.value == null ? true : r.process_status == selectedStatus.value;
+
+      return matchReason && matchStatus;
+    });
+  });
+  /*
   const tableData = ref(
     rawData.map((item, index) => {
       let categories = '';
@@ -44,13 +138,13 @@
       };
     }),
   );
-
+  */
   const currentPage = ref(1);
   const pageSize = 12;
 
   const currentPageData = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
-    return tableData.value.slice(start, start + pageSize);
+    return filteredReports.value.slice(start, start + pageSize);
   });
 </script>
 
@@ -61,12 +155,13 @@
         <div class="panel-filters">
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="selectedStatus"
               placeholder="狀態"
               style="width: 240px"
+              clearable
             >
               <el-option
-                v-for="item in options"
+                v-for="item in statusOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -75,15 +170,17 @@
           </div>
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="selectedReason"
               placeholder="原因"
               style="width: 240px"
+              clearable
+              :loading="loadingCats"
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in categories"
+                :key="item.category_no"
+                :label="item.category_name"
+                :value="Number(item.category_no)"
               />
             </el-select>
           </div>
@@ -101,7 +198,7 @@
             width="100"
           />
           <el-table-column
-            prop="post"
+            prop="reported_title"
             label="檢舉貼文"
           />
           <el-table-column
