@@ -1,56 +1,148 @@
 <script setup>
   import { RouterLink, RouterView } from 'vue-router';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
+  import { ElMessage } from 'element-plus';
   import 'element-plus/dist/index.css';
   import Button from '@/components/Button.vue';
   import rawData from '@/assets/data/Community/comment_reports_test.json';
   import Pagination from '@/components/Pagination.vue';
 
-  const tableData = ref(
-    rawData.map((item, index) => {
-      let categories = '';
-      switch (item.reason_no) {
-        case 1:
-          categories = '仇恨言論';
-          break;
+  const { VITE_API_BASE } = import.meta.env;
 
-        case 2:
-          categories = '暴力內容';
-          break;
+  const loadingCats = ref(false);
+  const categories = ref([]);
+  const tableData = ref([]);
 
-        case 3:
-          categories = '詐騙、不實資訊';
-          break;
+  onMounted(async () => {
+    loadingCats.value = true;
+    try {
+      const res = await fetch(`${VITE_API_BASE}/api/community/report_categories_get.php`);
+      const data = await res.json();
 
-        case 4:
-          categories = '自我傷害、自殺';
-          break;
+      // console.log(data.status);
+      if (data.status === 'success') categories.value = data.data;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loadingCats.value = false;
+    }
+  });
 
-        case 5:
-          categories = '霸凌、騷擾';
-          break;
+  const STATUS = { PENDING: 0, DONE: 2, REJECTED: 3 };
+  const toStatusText = (code) => {
+    const n = Number(code);
+    switch (n) {
+      case STATUS.PENDING:
+        return '未審理';
+      case STATUS.DONE:
+        return '已審理';
+      case STATUS.REJECTED:
+        return '不受理';
+      default:
+        return '未審理';
+    }
+  };
 
-        default:
-          categories = '未分類';
-          break;
-      }
+  const sanitizeStatus = (code) => {
+    const n = Number(code);
+    switch (n) {
+      case STATUS.PENDING:
+      case STATUS.DONE:
+      case STATUS.REJECTED:
+        return n;
+      default:
+        return STATUS.PENDING;
+    }
+  };
+
+  const statusOptions = [
+    { label: toStatusText(STATUS.PENDING), value: STATUS.PENDING },
+    { label: toStatusText(STATUS.DONE), value: STATUS.DONE },
+    { label: toStatusText(STATUS.REJECTED), value: STATUS.REJECTED },
+  ];
+
+  onMounted(async () => {
+    const res = await fetch(`${VITE_API_BASE}/api/community/comment_report_get.php`);
+    const raw = await res.json();
+
+    const data = raw.data || [];
+
+    tableData.value = data.map((r) => {
+      const process_status = sanitizeStatus(r.status);
       return {
-        report_no: item.report_no,
-        comment: '測試DEF',
-        reason: categories,
-        reporter_id: item.reporter_id,
-        reported_at: item.reported_at,
-        status: '未審理',
+        ...r,
+        category_no: Number(r.category_no),
+        reason: r.category_name, // 顯示用
+        process_status,
+        report_no: r.report_no,
+        content: r.content,
+        reporter_id: r.reporter_id,
+        reported_at: r.reported_at,
       };
-    }),
-  );
+    });
+    console.log('[reports sample]', tableData.value.slice(0, 3));
+    console.log('[categories raw]', categories.value);
+  });
+
+  const selectedStatus = ref(''); // 狀態下拉
+  const selectedReason = ref(''); // 原因下拉
+
+  const filteredReports = computed(() => {
+    return tableData.value.filter((r) => {
+      // 分類篩選
+      const matchReason = !selectedReason.value || r.category_no == selectedReason.value;
+      // 狀態篩選
+      const matchStatus =
+        selectedStatus.value == null ? true : r.process_status == selectedStatus.value;
+
+      return matchReason && matchStatus;
+    });
+  });
+
+  async function saveStatus(row, newStatus) {
+    const next = Number(newStatus);
+    const prev = Number(row.process_status);
+    row._prevStatus = prev;
+
+    row.process_status = next;
+    row._saving = true;
+
+    try {
+      const res = await fetch(`${VITE_API_BASE}/api/community/comment_report_status_save.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          report_no: Number(row.report_no), // ← 這裡要用 report_no
+          status: next, // 0 / 2 / 3
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.status !== 'success') {
+        throw new Error(data.message || `HTTP ${res.status}`);
+      }
+
+      ElMessage.success('狀態已更新');
+    } catch (error) {
+      row.process_status = row._prevStatus;
+      console.error(error);
+      ElMessage.error(error.message || '狀態更新失敗');
+    } finally {
+      row._saving = false;
+    }
+  }
+
+  function rememberPrevStatus(row) {
+    row._prevStatus = row.process_status;
+  }
 
   const currentPage = ref(1);
   const pageSize = 12;
 
   const currentPageData = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
-    return tableData.value.slice(start, start + pageSize);
+    return filteredReports.value.slice(start, start + pageSize);
   });
 </script>
 
@@ -61,12 +153,13 @@
         <div class="panel-filters">
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="selectedStatus"
               placeholder="狀態"
               style="width: 240px"
+              clearable
             >
               <el-option
-                v-for="item in options"
+                v-for="item in statusOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -75,15 +168,17 @@
           </div>
           <div class="table-filters__select">
             <el-select
-              v-model="value"
+              v-model="selectedReason"
               placeholder="原因"
               style="width: 240px"
+              clearable
+              :loading="loadingCats"
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in categories"
+                :key="item.category_no"
+                :label="item.category_name"
+                :value="Number(item.category_no)"
               />
             </el-select>
           </div>
@@ -101,7 +196,7 @@
             width="100"
           />
           <el-table-column
-            prop="comment"
+            prop="content"
             label="檢舉留言"
           />
           <el-table-column
@@ -123,21 +218,23 @@
           >
             <template #default="{ row }">
               <el-select
-                v-model="row.狀態"
+                v-model="row.process_status"
                 placeholder="選擇狀態"
                 style="width: 140px"
+                @focus="rememberPrevStatus(row)"
+                @change="(val) => saveStatus(row, val)"
               >
                 <el-option
-                  label="未審理"
-                  value="未審理"
+                  :label="toStatusText(STATUS.PENDING)"
+                  :value="STATUS.PENDING"
                 />
                 <el-option
-                  label="已審理"
-                  value="已審理"
+                  :label="toStatusText(STATUS.DONE)"
+                  :value="STATUS.DONE"
                 />
                 <el-option
-                  label="不受理"
-                  value="不受理"
+                  :label="toStatusText(STATUS.REJECTED)"
+                  :value="STATUS.REJECTED"
                 />
               </el-select>
             </template>
@@ -146,7 +243,7 @@
       </div>
       <div class="pagination">
         <Pagination
-          :total="tableData.length"
+          :total="filteredReports.length"
           :page-size="pageSize"
           v-model:currentPage="currentPage"
         />
