@@ -1,9 +1,8 @@
 <script setup>
   import { RouterLink, RouterView } from 'vue-router';
   import { ref, computed, onMounted } from 'vue';
+  import { ElMessage } from 'element-plus';
   import 'element-plus/dist/index.css';
-  import Button from '@/components/Button.vue';
-  import rawData from '@/assets/data/Community/post_reports_test.json';
   import Pagination from '@/components/Pagination.vue';
 
   const { VITE_API_BASE } = import.meta.env;
@@ -72,7 +71,7 @@
       const process_status = sanitizeStatus(r.status);
       return {
         ...r,
-        category_no: r.category_no,
+        category_no: Number(r.category_no),
         reason: r.category_name, // 顯示用
         process_status,
         report_no: r.report_no,
@@ -99,46 +98,45 @@
       return matchReason && matchStatus;
     });
   });
-  /*
-  const tableData = ref(
-    rawData.map((item, index) => {
-      let categories = '';
-      switch (item.reason_no) {
-        case 1:
-          categories = '仇恨言論';
-          break;
 
-        case 2:
-          categories = '暴力內容';
-          break;
+  async function saveStatus(row, newStatus) {
+    const next = Number(newStatus);
+    const prev = Number(row.process_status);
+    row._prevStatus = prev;
 
-        case 3:
-          categories = '詐騙、不實資訊';
-          break;
+    row.process_status = next;
+    row._saving = true;
 
-        case 4:
-          categories = '自我傷害、自殺';
-          break;
+    try {
+      const res = await fetch(`${VITE_API_BASE}/api/community/post_report_status_save.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          report_no: Number(row.report_no), // ← 這裡要用 report_no
+          status: next, // 0 / 2 / 3
+        }),
+      });
 
-        case 5:
-          categories = '霸凌、騷擾';
-          break;
-
-        default:
-          categories = '未分類';
-          break;
+      const data = await res.json();
+      if (!res.ok || data.status !== 'success') {
+        throw new Error(data.message || `HTTP ${res.status}`);
       }
-      return {
-        report_no: item.report_no,
-        post: '測試ABC',
-        reason: categories,
-        reporter_id: item.reporter_id,
-        reported_at: item.reported_at,
-        status: '未審理',
-      };
-    }),
-  );
-  */
+
+      ElMessage.success('狀態已更新');
+    } catch (error) {
+      row.process_status = row._prevStatus;
+      console.error(error);
+      ElMessage.error(error.message || '狀態更新失敗');
+    } finally {
+      row._saving = false;
+    }
+  }
+
+  function rememberPrevStatus(row) {
+    row._prevStatus = row.process_status;
+  }
+
   const currentPage = ref(1);
   const pageSize = 12;
 
@@ -214,27 +212,29 @@
             label="檢舉時間"
           />
           <el-table-column
-            prop="status"
+            prop="process_status"
             label="狀態"
             width="200"
           >
             <template #default="{ row }">
               <el-select
-                v-model="row.狀態"
+                v-model="row.process_status"
                 placeholder="選擇狀態"
                 style="width: 140px"
+                @focus="rememberPrevStatus(row)"
+                @change="(val) => saveStatus(row, val)"
               >
                 <el-option
-                  label="未審理"
-                  value="未審理"
+                  :label="toStatusText(STATUS.PENDING)"
+                  :value="STATUS.PENDING"
                 />
                 <el-option
-                  label="已審理"
-                  value="已審理"
+                  :label="toStatusText(STATUS.DONE)"
+                  :value="STATUS.DONE"
                 />
                 <el-option
-                  label="不受理"
-                  value="不受理"
+                  :label="toStatusText(STATUS.REJECTED)"
+                  :value="STATUS.REJECTED"
                 />
               </el-select>
             </template>
@@ -243,7 +243,7 @@
       </div>
       <div class="pagination">
         <Pagination
-          :total="tableData.length"
+          :total="filteredReports.length"
           :page-size="pageSize"
           v-model:currentPage="currentPage"
         />
