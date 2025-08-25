@@ -42,7 +42,6 @@
           @close="handleClose"
         >
           <el-menu-item index="/dashboard">儀表板</el-menu-item>
-          <el-menu-item index="/admin">管理員管理</el-menu-item>
           <el-menu-item index="/village_chief">里長資料管理</el-menu-item>
           <el-menu-item index="/news">最新消息管理</el-menu-item>
           <el-sub-menu index="events-group">
