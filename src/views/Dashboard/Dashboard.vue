@@ -41,11 +41,20 @@ import NewsChart from '@/components/NewsChart.vue';
         </div>
     </div>
     </div>
-    <!-- <div class="RepairBoard">
+    <div class="RepairBoard">
         <div class="RepairBoard__title">
             <h1>維修概況</h1>
         </div>
-    </div> -->
+        <div class="RepairBoard__status">
+            <ul>
+                <li style="color:gold;">待處理</li>
+                <li style="color:lightgreen;">已處理</li>
+                <li style="color:red;">不受理</li>
+            </ul>
+        </div>
+                    <iframe width='100%' height='500px' src="https://api.mapbox.com/styles/v1/ninety9/cmeqp4vhd00p801ss3yg294ba.html?title=false&access_token=pk.eyJ1IjoibmluZXR5OSIsImEiOiJjbWVxb21nZ3cweWN4MmpyMDZuNDh1cG9nIn0.q72WdYGN7G0a70dMxLnlfg&zoomwheel=false#15.64/24.957251/121.223959/0/41" title="KongLongLang_map" style="border:none;"></iframe>
+
+    </div>
 </template>
 
 <style scoped lang="scss">
@@ -112,5 +121,33 @@ template{
                 }
         }
     }
+    .RepairBoard{
+        position: relative;
+        &__title{
+            background-color:#6782A4 ;
+            h1{
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            padding: 10px 0;
+            }
+        }
 
+        &__status{
+            position: absolute;
+            right: 5%;
+            // display: flex;
+            // justify-content: flex-end;
+            ul{
+            list-style:disc;
+            padding-right: 1.5em;
+            padding-top: 1em;
+            li{
+                padding: 0.5em;
+            }
+            }
+            
+        }
+        }
+    
 </style>
