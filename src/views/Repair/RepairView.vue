@@ -415,11 +415,11 @@
             </div>
             <div class="dialog_text">
               <p>聯絡電話：</p>
-              <p>0912123123</p>
+              <p>{{ selectedRepair.reporter_phone }}</p>
             </div>
             <div class="dialog_text">
               <p>通報人：</p>
-              <p>王小明</p>
+              <p>{{ selectedRepair.reporter_name }}</p>
             </div>
             <div class="dialog_text">
               <p>情形描述：</p>
