@@ -56,7 +56,7 @@
         const imagePath = data.data[0].profile_image;
         imageUrl.value = imagePath.startsWith('http') ? imagePath : `${VITE_API_BASE}${imagePath}`;
       } else {
-        imageUrl.value = ''; // 如果没有图片，确保 imageUrl 是空的
+        imageUrl.value = '';
       }
     } catch (error) {
       ElMessage.error(error.message || '资料载入失败');
@@ -186,10 +186,10 @@
 
   const beforeAvatarUpload = (rawFile) => {
     const isJpgOrPng = rawFile.type === 'image/jpeg' || rawFile.type === 'image/png';
-    const isLt2M = rawFile.size / 1024 / 1024 < 2;
+    const isLt5M = rawFile.size / 1024 / 1024 < 5;
 
     if (!isJpgOrPng) ElMessage.error('大頭照只能是 JPG 或 PNG 格式!');
-    if (!isLt2M) ElMessage.error('圖片大小不能超過 2MB!');
+    if (!isLt5M) ElMessage.error('圖片大小不能超過 5MB');
     return isJpgOrPng && isLt2M;
   };
 </script>
