@@ -108,7 +108,9 @@
         <el-main style="padding: 0;">
         
         <div class="content-wrapper">
-            <h2 class="page-subtitle">{{ eventTitle }}：報名管理</h2>
+            <!-- <h2 class="page-subtitle">{{ eventTitle ? eventTitle + '：' : '' }}：報名管理</h2> -->
+            <h2 class="page-subtitle">{{ eventTitle }} 報名管理</h2>
+            <!-- <h2 class="page-subtitle">{{ event.title}}：報名管理</h2> -->
 
             <div class="panel">
             <div class="panel-filters">

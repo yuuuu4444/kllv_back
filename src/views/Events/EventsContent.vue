@@ -54,8 +54,8 @@
   // 既有的 computed 和分頁邏輯
   const filteredTableData = computed(() => {
     return tableData.value.filter((item) => {
-      const statusMatch = statusFilter.value === '' || item.status === statusFilter.value;
-      const categoryMatch = categoryFilter.value === '' || item.category_no === categoryFilter.value;
+      const statusMatch = statusFilter.value == '' || item.status == statusFilter.value;
+      const categoryMatch = categoryFilter.value == '' || item.category_no == categoryFilter.value;
       return statusMatch && categoryMatch;
     }).map(item => ({
       ...item,
