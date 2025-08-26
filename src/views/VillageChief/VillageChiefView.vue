@@ -190,7 +190,7 @@
 
     if (!isJpgOrPng) ElMessage.error('大頭照只能是 JPG 或 PNG 格式!');
     if (!isLt5M) ElMessage.error('圖片大小不能超過 5MB');
-    return isJpgOrPng && isLt2M;
+    return isJpgOrPng && isLt5M;
   };
 </script>
 
