@@ -3,6 +3,7 @@
     import Pagination from '@/components/Pagination.vue';
     import { ElDialog, ElButton, ElTable, ElTableColumn, ElContainer, ElMain, ElIcon, ElInput } from 'element-plus';
     import { Search } from '@element-plus/icons-vue';
+    import { ElMessage } from 'element-plus';
 
     const props = defineProps({
     event_no: { type: [String, Number], required: true }
@@ -66,20 +67,51 @@
     isLoadingDialog.value = true;
     try {
         const response = await fetch(`${VITE_API_BASE}/api/events/events_registration_detail_get.php?reg_no=${regNo}`);
-        if (!response.ok) throw new Error('API 請求失敗');
+        if (!response.ok) throw new Error(`API 請求失敗，狀態碼: ${response.status}`);
         const result = await response.json();
         if (result.status === 'success') {
         dialogData.value = result.data;
+         //ElMessage.success('成功載入訂單詳情！');
+            } else {
+            // 如果是後端回傳的業務邏輯錯誤 (e.g., status: 'error')
+            throw new Error(result.message || '無法載入訂單詳情');
         }
     } catch (error) {
         console.error(`獲取訂單 ${regNo} 詳情失敗:`, error);
-        alert(`載入訂單詳情失敗`);
+        ElMessage.error(error.message || `載入訂單詳情失敗`); // <<<<<< 在這裡顯示錯誤提示！
+        isDialogVisible.value = false;
     } finally {
         isLoadingDialog.value = false;
     }
     }
 
     const statusOptions = [ { label: '已完成', value: 1 }, { label: '未完成', value: 0 }];
+    async function updateOrderStatus(order) {
+        try {
+            const response = await fetch(`${VITE_API_BASE}/api/events/registrations_status_update.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                reg_no: order.reg_no,
+                status: order.status
+            })
+            });
+
+            const result = await response.json();
+            if (result.status === 'success') {
+            ElMessage.success('訂單狀態更新成功！');
+            } else {
+            ElMessage.error('訂單狀態更新失敗: ' + result.message);
+            // 如果更新失敗可以考慮重新呼叫fetchOrders()來還原畫面
+            // await fetchOrders(); 
+            }
+        } catch (error) {
+            ElMessage.error('網路請求失敗，無法更新訂單狀態');
+            console.error("更新訂單狀態時發生錯誤:", error);
+        }
+        }
+
     const currentPage = ref(1);
     const pageSize = 12;
 
@@ -148,7 +180,17 @@
                 <el-table-column prop="payment_name" label="付款方式" />
                 <el-table-column label="狀態">
                 <template #default="{ row }">
-                    <el-select v-model="row.status"><el-option v-for="opt in statusOptions" :key="opt.value" :label="opt.label" :value="opt.value"/></el-select>
+                    <el-select 
+                        v-model="row.status"
+                        @change="updateOrderStatus(row)"
+                    >
+                        <el-option
+                            v-for="opt in statusOptions"
+                            :key="opt.value"
+                            :label="opt.label"
+                            :value="opt.value"
+                        />
+                    </el-select>
                 </template>
                 </el-table-column>
                 <el-table-column label="名單">

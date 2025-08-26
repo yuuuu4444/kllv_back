@@ -2,71 +2,91 @@
   import { RouterLink } from 'vue-router';
   import { ref, computed, onMounted } from 'vue';
   import 'element-plus/dist/index.css';
+  import { ElMessage } from 'element-plus';
   import Button from '@/components/Button.vue';
-  // import rawData from '@/assets/data/Events/events_test.json'; //假資料
   import Pagination from '@/components/Pagination.vue';
 
-  // 引入環境變數 & 準備 ref
   const { VITE_API_BASE } = import.meta.env;
-  const tableData = ref([]); // 用於儲存從 API 獲取的活動列表
-  const categoryOptions = ref([]); // 用於儲存從 API 獲取的分類列表
-  const isLoading = ref(true); // 用於追蹤載入狀態
 
-  const statusFilter = ref('');
+  // 1保持 statusOptions和categoryOptions結構
   const statusOptions = [
-    { label: '未發布', value: 0 },
-    { label: '已發布', value: 2 },
-    { label: '已取消', value: 3 },
-  ];
-  const categoryFilter = ref('');
+  { label: '未發布', value: '0' },
+  { label: '已發布', value: '2' },
+  { label: '已取消', value: '3' },
+];
+  const categoryOptions = ref([]);
+  const isLoading = ref(true);
 
-  // 在 onMounted 中呼叫 API ---
-  onMounted(async () => {
-    isLoading.value = true;
+  // 2建立fetchEventsData和fetchCategoriesData兩個獨立函式
+  const tableData = ref([]);
+  const fetchEventsData = async () => {
     try {
-      const [eventsRes, categoriesRes] = await Promise.all([
-        fetch(`${VITE_API_BASE}/api/events/events_get.php`),
-        fetch(`${VITE_API_BASE}/api/events/events_categories_get.php`),
-      ]);
+      //呼叫後台專用的events_get_admin.php
+      const res = await fetch(`${VITE_API_BASE}/api/events/events_get_admin.php`);
+      const data = await res.json();
+      if (data.status === 'success') {
+        tableData.value = data.data;
+      }
+    } catch (error) { console.error('獲取活動資料失敗:', error); }
+  };
 
-      if (!eventsRes.ok || !categoriesRes.ok) throw new Error('API 請求失敗');
-
-      const eventsData = await eventsRes.json();
-      const categoriesData = await categoriesRes.json();
-
-      if (eventsData.status === 'success') {
-        tableData.value = eventsData.data;
-      } 
-      if (categoriesData.status === 'success') {
-        categoryOptions.value = categoriesData.data.map(cat => ({
-          label: cat.category_name,
-          value: cat.category_no,
+  const fetchCategoriesData = async () => {
+    try {
+      const res = await fetch(`${VITE_API_BASE}/api/events/events_categories_get.php`);
+      const data = await res.json();
+      if (data.status === 'success') {
+        // 把API回傳的資料直接map成el-select需要的{ label, value }格式
+        categoryOptions.value = data.data.map(item => ({
+          label: item.category_name,
+          value: item.category_no,
         }));
       }
-    } catch (error) {
-      console.error("獲取活動資料時發生錯誤:", error);
-      alert("無法載入活動資料，請稍後再試。");
-    } finally {
-      isLoading.value = false;
-    }
+    } catch (error) { console.error('獲取分類資料失敗:', error); }
+  };
+
+  // 3建立updateEventStatus
+  const updateEventStatus = async (event_no, status) => {
+    try {
+      const res = await fetch(`${VITE_API_BASE}/api/events/events_status_update.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ event_no, status }),
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        ElMessage.success('狀態更新成功');
+      } else {
+        ElMessage.error('狀態更新失敗: ' + data.message);
+      }
+    } catch (error) { ElMessage.error('更新請求失敗'); }
+  };
+
+  // 4在onMounted中依序呼叫這些函式
+  onMounted(async () => {
+    isLoading.value = true;
+    await fetchEventsData();
+    await fetchCategoriesData();
+    isLoading.value = false;
   });
 
-  // 既有的 computed 和分頁邏輯
+  // 5修改filteredTableData的篩選邏輯
+  const statusFilter = ref(null); // 改成null更符合el-select clearable的行為
+  const categoryFilter = ref(null);
   const filteredTableData = computed(() => {
     return tableData.value.filter((item) => {
-      const statusMatch = statusFilter.value == '' || item.status == statusFilter.value;
-      const categoryMatch = categoryFilter.value == '' || item.category_no == categoryFilter.value;
+      const statusMatch = item.status == statusFilter.value || !statusFilter.value;
+      const categoryMatch = item.category_no == categoryFilter.value || !categoryFilter.value;
       return statusMatch && categoryMatch;
     }).map(item => ({
+      // 仍需要.map只為了加上category_label
       ...item,
-      // API 直接回傳 category_name，所以直接用，不再需要手動 find
       category_label: item.category_name 
     }));
   });
 
   const currentPage = ref(1);
   const pageSize = 12;
-
   const currentPageData = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
     return filteredTableData.value.slice(start, start + pageSize);
@@ -136,7 +156,11 @@
           </el-table-column>
           <el-table-column prop="status" label="狀態">
             <template #default="{ row }">
-              <el-select v-model="row.status" style="width: 140px">
+              <el-select
+                v-model="row.status"
+                style="width: 140px"
+                @change="(newStatus) => updateEventStatus(row.event_no, newStatus)"
+              >
                 <el-option
                   v-for="option in statusOptions"
                   :key="option.value"
@@ -146,6 +170,18 @@
               </el-select>
             </template>
           </el-table-column>
+          <!-- <el-table-column prop="status" label="狀態">
+            <template #default="{ row }">
+              <el-select v-model="row.status" style="width: 140px" @change="handleStatusChange(row)">
+                <el-option
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
+                />
+              </el-select>
+            </template>
+          </el-table-column> -->
           <el-table-column prop="manipulate" label="操作" width="200">
             <template #default="{ row }">
               <RouterLink :to="`/events_content/edit/${row.event_no}`">
