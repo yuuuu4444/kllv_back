@@ -38,12 +38,11 @@
 
   // 過濾戶籍
   const statusFilter = ref(null);
-  const filteredTableData = computed(() => {
-    return tableData.value.filter((item) => {
-      const statusMatch = item.status === statusFilter.value || !statusFilter.value;
-      return statusMatch;
-    });
-  });
+  const filteredTableData = computed(() =>
+    tableData.value.filter((item) =>
+      statusFilter.value === null ? true : item.status === statusFilter.value,
+    ),
+  );
 
   // 設定分頁
   const currentPage = ref(1);
