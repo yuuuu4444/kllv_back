@@ -60,9 +60,16 @@
   const categoryFilter = ref(null);
   const filteredTableData = computed(() => {
     return tableData.value.filter((item) => {
-      const statusMatch = statusFilter.value === null ? true : item.status === statusFilter.value;
+      const statusMatch =
+        statusFilter.value == null || statusFilter.value === ''
+          ? true
+          : item.status === statusFilter.value;
+
       const categoryMatch =
-        categoryFilter.value === null ? true : item.category_no === categoryFilter.value;
+        categoryFilter.value == null || categoryFilter.value === ''
+          ? true
+          : item.category_no === categoryFilter.value;
+
       return statusMatch && categoryMatch;
     });
   });
