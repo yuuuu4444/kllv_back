@@ -52,7 +52,7 @@ import NewsChart from '@/components/NewsChart.vue';
                 <li style="color:red;">不受理</li>
             </ul>
         </div>
-                    <iframe width='100%' height='500px' src="https://api.mapbox.com/styles/v1/ninety9/cmeqp4vhd00p801ss3yg294ba.html?title=false&access_token=pk.eyJ1IjoibmluZXR5OSIsImEiOiJjbWVxb21nZ3cweWN4MmpyMDZuNDh1cG9nIn0.q72WdYGN7G0a70dMxLnlfg&zoomwheel=false#15.64/24.957251/121.223959/0/41" title="KongLongLang_map" style="border:none;"></iframe>
+                    <iframe width='100%' height='400px' src="https://api.mapbox.com/styles/v1/ninety9/cmeqp4vhd00p801ss3yg294ba.html?title=false&access_token=pk.eyJ1IjoibmluZXR5OSIsImEiOiJjbWV0bzM4a20wMTN2MmlyNDZxaGt2aG84In0.1Cl5YtNdZE1uZtQcXYSXiQ&zoomwheel=false#15.54/24.957677/121.224303/0/41" title="KongLongLang_map" style="border:none;"></iframe>
 
     </div>
 </template>
@@ -123,6 +123,8 @@ template{
     }
     .RepairBoard{
         position: relative;
+        margin-bottom: 40px;
+        box-shadow: 2px 4px 8.2px 0 rgba(0, 0, 0, 0.25);
         &__title{
             background-color:#6782A4 ;
             h1{
@@ -149,5 +151,4 @@ template{
             
         }
         }
-    
 </style>
