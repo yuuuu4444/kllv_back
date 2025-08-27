@@ -69,7 +69,7 @@ router.beforeEach(async (to) => {
 
   // 已登入卻進到登入頁 → 導到後台首頁
   if (to.path === '/' && auth.isLoggedIn) {
-    return { path: '/village_chief', replace: true };
+    return { path: '/dashboard', replace: true };
   }
 
   // 需要登入但尚未登入 → 回登入頁

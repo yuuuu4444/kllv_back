@@ -35,7 +35,7 @@
       if (ok) {
         ElMessage.success('登入成功');
         const redirect =
-          typeof route.query.redirect === 'string' ? route.query.redirect : '/village_chief';
+          typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard';
         router.replace(redirect); // 用 replace 避免返回鍵回到登入頁
       } else {
         ElMessage.error(auth.error || '登入失敗');
