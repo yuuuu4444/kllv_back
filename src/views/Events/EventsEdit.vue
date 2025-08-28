@@ -142,20 +142,30 @@
         }
         options = { method: 'PUT', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: bodyParams };
       } else {
-        url = `${VITE_API_BASE}/events/events_post.php`;
-        const bodyData = new FormData();
-        for (const key in formData.value) {
-          if (key === 'daterange') {
-            bodyData.append('daterange[]', formData.value.daterange[0]);
-            bodyData.append('daterange[]', formData.value.daterange[1]);
-          } else {
-            bodyData.append(key, formData.value[key]);
-          }
-        }
-        options = { method: 'POST', body: bodyData };
-      }
+        url = `${VITE_API_BASE}/api/events/events_post.php`;
+      //   const bodyData = new FormData();
+      //   for (const key in formData.value) {
+      //     if (key === 'daterange') {
+      //       bodyData.append('daterange[]', formData.value.daterange[0]);
+      //       bodyData.append('daterange[]', formData.value.daterange[1]);
+      //     } else {
+      //       bodyData.append(key, formData.value[key]);
+      //     }
+      //   }
+      //   options = { method: 'POST', body: bodyData };
+      // }
 
-      const res = await fetch(url, options);
+      // const res = await fetch(url, options);
+      options = {
+      method: 'POST',
+      // 告訴fetch我們要發送的是JSON
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      // 把formData直接轉換成JSON字串
+      body: JSON.stringify(formData.value),
+    };
+  }
+  const res = await fetch(url, options);
       const data = await res.json();
 
       if (!res.ok || data.status !== 'success') {
